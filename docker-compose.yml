@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  backend:
+    build: ./backend
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    restart: on-failure
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=passowrd
+      - POSTGRES_DB=database
+    ports:
+      # Standard port for PostgreSQL databases
+      - "5432:5432"
+    volumes:
+      - inplace_db_data:/var/lib/postgresql/data
+    restart: always
+    
+volumes:
+  inplace_db_data: {}

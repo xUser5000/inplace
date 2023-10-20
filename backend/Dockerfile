@@ -3,8 +3,10 @@ FROM node:18-alpine
 # Create app directory
 WORKDIR /app
 
+
 # Copy Source code
 COPY . .
+
 
 # install dependencies
 RUN npm install

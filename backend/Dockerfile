@@ -25,4 +25,4 @@ COPY . .
 EXPOSE 3000
 
 # Run the app
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "dev" ]

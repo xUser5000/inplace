@@ -1,26 +1,37 @@
+
 version: "3"
 
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
     depends_on:
       - db
     ports:
-      - "8000:8000"
+      - "3000:3000"
+    volumes:
+      - "./backend/:/app/"
     restart: on-failure
+    networks:
+      - my_network
 
   db:
     image: postgres:16-alpine
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=passowrd
-      - POSTGRES_DB=database
+      - POSTGRES_DB=databaseo
     ports:
-      # Standard port for PostgreSQL databases
       - "5432:5432"
     volumes:
       - inplace_db_data:/var/lib/postgresql/data
     restart: always
-    
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
+
 volumes:
   inplace_db_data: {}

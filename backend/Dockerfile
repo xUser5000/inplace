@@ -12,11 +12,11 @@ WORKDIR /app
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
 
-# install dependencies
-RUN npm install
-
 # install nodemon globally for hot reloading
 RUN npm install -g nodemon
+
+# install dependencies
+RUN npm install
 
 # Copy Source code
 COPY . .

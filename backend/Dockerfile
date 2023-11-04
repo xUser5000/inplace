@@ -4,19 +4,18 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Install app dependencies:
-# Note that, rather than copying the entire working directory,
-# we are only copying the package.json file.
+# Note we are installing nodemon and copying package.json first.
 # This allows us to take advantage of cached Docker layers.
 # source: https://bitjudo.com/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/
+
+# install nodemon globally for hot reloading
+RUN npm install -g nodemon
 
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
 
 # install dependencies
 RUN npm install
-
-# install nodemon globally for hot reloading
-RUN npm install -g nodemon
 
 # Copy Source code
 COPY . .

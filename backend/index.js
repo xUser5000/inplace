@@ -12,6 +12,7 @@ const { NotFoundError } = require("./core/errors");
 const app = express();
 
 // Middlewares
+app.use(express.json());
 app.use(morgan("dev"));
 
 app.get("/", (req, res) => {

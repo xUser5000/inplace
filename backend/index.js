@@ -15,9 +15,7 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 
-app.get("/", (req, res) => {
-    res.send("Welcome to Inplace");
-});
+app.use("/debug", (req, res) => res.status(200).json({ debug: true }));
 
 // Error handling middleware
 app.use(errorHandler());

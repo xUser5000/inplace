@@ -11,7 +11,7 @@ First, you need to rename `backend/.env-example` to `backend/.env` and fill in t
 
 Then run the following commands to start the backend and database containers
 ```bash
-docker compose build # to build images
+docker compose build # to build images (you'll need to do this every time backend/package.json changes)
 docker compose up # to start containers
 ```
 

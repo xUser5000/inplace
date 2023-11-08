@@ -4,6 +4,9 @@ const morgan = require("morgan");
 const joi = require("joi");
 require('express-async-errors');
 
+// environment variables
+require("dotenv").config();
+
 // Custom modules
 const sequelize = require("./core/db");
 const { errorHandler, schemaValidator } = require("./core/middlewares");
@@ -20,7 +23,7 @@ app.use("/debug", (req, res) => res.status(200).json({ debug: true }));
 // Error handling middleware
 app.use(errorHandler());
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || process.env.DEFAULT_PORT;
 app.listen(PORT, async () => {
     await sequelize.authenticate();
     console.log("Database connection established");

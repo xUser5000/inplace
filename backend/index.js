@@ -10,7 +10,7 @@ require("dotenv").config();
 // Custom modules
 const sequelize = require("./core/db");
 const { errorHandler, schemaValidator } = require("./core/middlewares");
-const { NotFoundError } = require("./core/errors");
+const { authRouter } = require("./authentication/router");
 
 const app = express();
 
@@ -19,6 +19,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 app.use("/debug", (req, res) => res.status(200).json({ debug: true }));
+app.use("/auth", authRouter);
 
 // Error handling middleware
 app.use(errorHandler());

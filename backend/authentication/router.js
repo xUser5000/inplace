@@ -10,7 +10,7 @@ const { VerificationToken } = require('./models');
 const {
     verificationEmail,
     generateVerificationToken,
-    validateVerificationToken,
+    decodeVerificationToken,
     hash,
 } = require("./utils");
 
@@ -55,7 +55,7 @@ authRouter.get('/verify/:token', async (req, res) => {
 
     let decodedToken = undefined;
     try {
-        decodedToken = validateVerificationToken(tokenString);
+        decodedToken = decodeVerificationToken(tokenString);
     } catch (err) {
         throw new ForbiddenError("Invalid verification token");
     }

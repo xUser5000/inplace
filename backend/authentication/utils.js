@@ -19,7 +19,7 @@ function generateVerificationToken(userId) {
 	return jwt.sign({ userId }, process.env.JWT_VERIFICATION_PRIVATE_KEY);
 }
 
-function validateVerificationToken(token) {
+function decodeVerificationToken(token) {
 	return jwt.verify(token, process.env.JWT_VERIFICATION_PRIVATE_KEY);
 }
 
@@ -36,7 +36,7 @@ async function compareHash(plain, hash) {
 module.exports = {
 	verificationEmail,
 	generateVerificationToken,
-	validateVerificationToken,
+	decodeVerificationToken,
 	hash,
 	compareHash
 };

@@ -39,7 +39,7 @@ class NotFoundError extends APIError {
 class ValidationError extends APIError {
     constructor(message, details) {
         super({
-            code: 403,
+            code: 400,
             name: "ValidationError",
             message,
             details,
@@ -47,4 +47,14 @@ class ValidationError extends APIError {
     }
 }
 
-module.exports = { APIError, NotFoundError, ValidationError };
+class ForbiddenError extends APIError {
+    constructor(message) {
+        super({
+            code: 403,
+            name: "ForbiddenError",
+            message,
+        });
+    }
+}
+
+module.exports = { APIError, NotFoundError, ValidationError, ForbiddenError };

@@ -16,12 +16,11 @@ function verificationEmail(email, verificationToken) {
 }
 
 function generateVerificationToken(userId) {
-  return (
-    jwt.sign({ userId }, process.env.JWT_VERIFICATION_PRIVATE_KEY),
-    {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-    }
-  );
+  return jwt.sign({ userId }, process.env.JWT_VERIFICATION_PRIVATE_KEY);
+}
+
+function generateAuthorizationToken(userId) {
+  return jwt.sign({ userId }, process.env.JWT_AUTHORIZATION_PRIVATE_KEY);
 }
 
 function validateVerificationToken(token) {
@@ -41,6 +40,7 @@ async function compareHash(plain, hash) {
 module.exports = {
   verificationEmail,
   generateVerificationToken,
+  generateAuthorizationToken,
   validateVerificationToken,
   hash,
   compareHash,

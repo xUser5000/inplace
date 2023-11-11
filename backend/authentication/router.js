@@ -10,6 +10,7 @@ const { VerificationToken } = require("./models");
 const {
   verificationEmail,
   generateVerificationToken,
+  generateAuthorizationToken,
   validateVerificationToken,
   hash,
   compareHash,
@@ -33,6 +34,12 @@ const registerSchema = joi.object({
     .messages({ "any.only": "Passwords do not match" })
     .required(),
 });
+
+const loginSchema = joi.object({
+  email: joi.string().email().required(),
+  password: joi.string().required(),
+});
+
 authRouter.post(
   "/register",
   schemaValidator(registerSchema),
@@ -49,7 +56,7 @@ authRouter.post(
     const verificationToken = await VerificationToken.create({
       content: generateVerificationToken(user.id),
     });
-    // await sendMail(verificationEmail(req.body.email, verificationToken));
+    await sendMail(verificationEmail(req.body.email, verificationToken));
 
     res.json(user);
   }
@@ -88,18 +95,15 @@ authRouter.get("/verify/:token", async (req, res) => {
 
   res.status(200).send("Your account has been verified!");
 });
-authRouter.post("/login", async (req, res) => {
+
+authRouter.post("/login", schemaValidator(loginSchema), async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    throw new ForbiddenError("please enter your email and password");
-  }
   const user = await User.findOne({ where: { email } });
   if (!user || !(await compareHash(password, user.password)))
     throw new ForbiddenError("invalid Email or password!");
-  const loginToken = generateVerificationToken(user.id);
-  res.status(200).json({
-    status: "OK!",
-    loginToken,
+  const token = generateAuthorizationToken(user.id);
+  res.json({
+    token,
     user,
   });
 });

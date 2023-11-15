@@ -11,20 +11,22 @@ require("dotenv").config();
 const sequelize = require("./core/db");
 const { errorHandler, schemaValidator } = require("./core/middlewares");
 const { authRouter } = require("./authentication/router");
+const { jwtFilter } = require("./authentication/middlewares");
 
 const app = express();
 
-// Middlewares
+// Global Middlewares
 app.use(express.json());
 app.use(morgan("dev"));
-app.get("/", (req, res) => {
-  res.send("OK");
-});
-app.use("/debug", (req, res) => res.status(200).json({ debug: true }));
+app.use(errorHandler());  // Error handling middleware
+
+// public routes (i.e routes where no authorization is required)
+app.get("/", (req, res) => res.send("OK"));
 app.use("/auth", authRouter);
 
-// Error handling middleware
-app.use(errorHandler());
+// private routes
+app.use(jwtFilter());
+app.get("/private", (req, res) => res.send("OK"));
 
 const PORT = process.env.PORT || process.env.DEFAULT_PORT;
 app.listen(PORT, async () => {

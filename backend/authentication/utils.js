@@ -18,12 +18,17 @@ function verificationEmail(email, verificationToken) {
 function generateVerificationToken(userId) {
   return jwt.sign({ userId }, process.env.JWT_VERIFICATION_PRIVATE_KEY);
 }
+
 function generateAuthorizationToken(userId) {
   return jwt.sign({ userId }, process.env.JWT_AUTHORIZATION_PRIVATE_KEY);
 }
 
 function decodeVerificationToken(token) {
   return jwt.verify(token, process.env.JWT_VERIFICATION_PRIVATE_KEY);
+}
+
+function decodeAuthorizationToken(token) {
+  return jwt.verify(token, process.env.JWT_AUTHORIZATION_PRIVATE_KEY);
 }
 
 async function hash(password) {
@@ -41,6 +46,7 @@ module.exports = {
   generateVerificationToken,
   generateAuthorizationToken,
   decodeVerificationToken,
+  decodeAuthorizationToken,
   hash,
   compareHash,
 };

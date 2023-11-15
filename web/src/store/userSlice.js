@@ -3,9 +3,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export const loginUser = createAsyncThunk(
     'user/loginUser',
     async(userCredentials)=>{
-        // TODO: Login API
-        const request = await axios.get(`http://127.0.0.1:3000/`);
+        // TODO: Change login api provided by backend
+        const request = await axios.get(`...`, userCredentials);
         const response = await request.data.data;
+        console.log(response);
         localStorage.setItem('user', JSON.stringify(response));
         return response;
     }

@@ -1,31 +1,55 @@
-import React, { useState } from 'react';
-import { Container, FormControl, Input, Button, FormLabel, Alert } from '@chakra-ui/react';
+import React from 'react';
+import {
+  Container,
+  FormControl,
+  Input,
+  Button,
+  FormLabel,
+  Alert,
+  FormErrorMessage,
+  Box,
+  Heading,
+  Text,
+  Flex,
+  Link,
+} from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../store/userSlice';
 import { useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+
+const initialValues = {
+  email: '',
+  password: '',
+};
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().email('Invalid email address').required('Email is required.'),
+  password: Yup.string().required('Password is required.'),
+});
 
 export function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
   const { loading, error } = useSelector((state) => state.user);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleLoginEvent = (e) => {
-    e.preventDefault();
-    let userCredential = {
-      email,
-      password
-    };
-    dispatch(loginUser(userCredential)).then((result) => {
-      if (result.payload) {
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: async (values) => {
+      try {
+        await dispatch(loginUser(values));
         setEmail('');
         setPassword('');
         navigate('/');
+      } catch (error) {
+        // Handle login error
       }
-    });
-  };
+    },
+  });
+
+  const { values, handleBlur, handleChange, handleSubmit } = formik;
 
   return (
     <Container
@@ -33,34 +57,60 @@ export function Login() {
       flexDir={'column'}
       justifyContent={'center'}
       alignItems={'center'}
-      maxW={'400px'}
-      gap={'10px'}>
-      {error && <Alert>Error</Alert>}
-      <FormControl>
-        <FormLabel>Email</FormLabel>
-        <Input
-          required
-          type="email"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
-        />
-      </FormControl>
+      h="100vh"
+    >
+      <Box
+        p={8}
+        maxW={'400px'}
+        w={'full'}
+        bg={'white'}
+        boxShadow={'2xl'}
+        rounded={'md'}
+        textAlign={'center'}
+      >
+        <Heading color={'blue.400'}>INPLACE</Heading>
+        <Text>Login to continue</Text>
+        <form onSubmit={handleSubmit}>
+          <FormControl isInvalid={formik.touched.email && formik.errors.email} mb={4} size="md">
+            <FormLabel>Email</FormLabel>
+            <Input
+              name="email"
+              type="email"
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              size="md"
+            />
+            <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
+          </FormControl>
 
-      <FormControl>
-        <FormLabel>Password</FormLabel>
-        <Input
-          required
-          type="password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
-        />
-      </FormControl>
+          <FormControl isInvalid={formik.touched.password && formik.errors.password} mb={4} size="md">
+            <FormLabel>Password</FormLabel>
+            <Input
+              name="password"
+              type="password"
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              size="md"
+            />
+            <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
+          </FormControl>
 
-      <Button type='submit' onSubmit={handleLoginEvent}>{loading ? 'Loading...' : 'Login'}</Button>
+          <Button type="submit" size="md" mb={4} isFullWidth>
+            {loading ? 'Loading...' : 'Login'}
+          </Button>
+        </form>
+
+        <Flex justifyContent="space-between" alignItems="center">
+          <Link href="#" textAlign="left">
+            Create an account
+          </Link>
+          <Link href="#" textAlign="right">
+            Can't Login
+          </Link>
+        </Flex>
+      </Box>
     </Container>
   );
 }

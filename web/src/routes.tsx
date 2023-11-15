@@ -5,6 +5,7 @@ import { NotFound } from "./pages/404";
 import { AboutPage } from "./pages/AboutPage";
 import { Home } from "./pages/Home"
 import { Layout } from "./pages/Layout";
+import { Login } from "./pages/Login";
 
 export const router = createBrowserRouter([
     {
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
             {
                 path: "/about",
                 element: <AboutPage />
+            },
+            {
+                path: "/login",
+                element: <Login />
             }
         ]
     },

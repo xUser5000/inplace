@@ -28,6 +28,10 @@ const Links = [
   {
     value: 'About',
     to: '/about'
+  },
+  {
+    value: 'Login',
+    to: '/login'
   }
 ];
 

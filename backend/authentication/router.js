@@ -10,8 +10,8 @@ const { VerificationToken } = require("./models");
 const {
   verificationEmail,
   generateVerificationToken,
+  decodeVerificationToken,
   generateAuthorizationToken,
-  validateVerificationToken,
   hash,
   compareHash,
 } = require("./utils");
@@ -34,12 +34,6 @@ const registerSchema = joi.object({
     .messages({ "any.only": "Passwords do not match" })
     .required(),
 });
-
-const loginSchema = joi.object({
-  email: joi.string().email().required(),
-  password: joi.string().required(),
-});
-
 authRouter.post(
   "/register",
   schemaValidator(registerSchema),
@@ -74,7 +68,7 @@ authRouter.get("/verify/:token", async (req, res) => {
 
   let decodedToken = undefined;
   try {
-    decodedToken = validateVerificationToken(tokenString);
+    decodedToken = decodeVerificationToken(tokenString);
   } catch (err) {
     throw new ForbiddenError("Invalid verification token");
   }
@@ -94,6 +88,11 @@ authRouter.get("/verify/:token", async (req, res) => {
   await verificationTokenRecord.destroy();
 
   res.status(200).send("Your account has been verified!");
+});
+
+const loginSchema = joi.object({
+  email: joi.string().email().required(),
+  password: joi.string().required(),
 });
 
 authRouter.post("/login", schemaValidator(loginSchema), async (req, res) => {

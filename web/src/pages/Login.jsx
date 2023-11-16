@@ -57,14 +57,14 @@ export function Login() {
       flexDir={'column'}
       justifyContent={'center'}
       alignItems={'center'}
-      h="100vh"
+      h="80vh"
     >
       <Box
         p={8}
         maxW={'400px'}
         w={'full'}
         bg={'white'}
-        boxShadow={'2xl'}
+        boxShadow={'md'}
         rounded={'md'}
         textAlign={'center'}
       >
@@ -97,16 +97,16 @@ export function Login() {
             <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
           </FormControl>
 
-          <Button type="submit" size="md" mb={4} isFullWidth>
+          <Button type="submit" colorScheme="blue" size="md"  width="full"  mb={4}>
             {loading ? 'Loading...' : 'Login'}
           </Button>
         </form>
 
         <Flex justifyContent="space-between" alignItems="center">
-          <Link href="#" textAlign="left">
+          <Link color={"blue.500"} href="#" textAlign="left">
             Create an account
           </Link>
-          <Link href="#" textAlign="right">
+          <Link color={"blue.500"} href="#" textAlign="right">
             Can't Login
           </Link>
         </Flex>

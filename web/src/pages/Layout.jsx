@@ -1,10 +1,11 @@
 import { Toaster } from 'react-hot-toast';
 import { Outlet } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
+import { Box } from '@chakra-ui/react';
 
 export function Layout() {
   return (
-    <div className="">
+    <Box background={"gray.50"} minHeight="100vh" >
       <Navbar />
       <Outlet />
       <Toaster
@@ -31,6 +32,6 @@ export function Layout() {
           }
         }}
       />
-    </div>
+    </Box>
   );
 }

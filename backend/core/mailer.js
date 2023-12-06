@@ -1,11 +1,9 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'inplace.service.mail@gmail.com',
-        pass: process.env.MAIL_APP_PASSWORD
-    }
+    host: 'mailhog',
+    port: 1025,
+    secure: false,
 });
 
 async function sendMail({ to, subject, html }) {

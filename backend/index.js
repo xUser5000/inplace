@@ -18,15 +18,18 @@ const app = express();
 // Global Middlewares
 app.use(express.json());
 app.use(morgan("dev"));
-app.use(errorHandler());  // Error handling middleware
 
 // public routes (i.e routes where no authorization is required)
-app.get("/", (req, res) => res.send("OK"));
+app.get("/", (req, res) => {
+  throw new ForbiddenError("You are not allowed to access this resource");
+});
 app.use("/auth", authRouter);
 
 // private routes
 app.use(jwtFilter());
 app.get("/private", (req, res) => res.send("OK"));
+
+app.use(errorHandler());  // Error handling middleware
 
 const PORT = process.env.PORT || process.env.DEFAULT_PORT;
 app.listen(PORT, async () => {

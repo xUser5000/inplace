@@ -42,15 +42,20 @@ authRouter.post(
       throw new ForbiddenError("Email already in use");
     }
 
+    const verified = (process.env.REQUIRE_EMAIL_VERIFICATION === "Yes") ? false : true;
+
     const user = await User.create({
       ...req.body,
+      verified,
       password: await hash(req.body.password),
     });
 
-    const verificationToken = await VerificationToken.create({
-      content: generateVerificationToken(user.id),
-    });
-    await sendMail(verificationEmail(req.body.email, verificationToken));
+    if (!verified) {
+      const verificationToken = await VerificationToken.create({
+        content: generateVerificationToken(user.id),
+      });
+      await sendMail(verificationEmail(req.body.email, verificationToken));
+    }
 
     res.json(user);
   }

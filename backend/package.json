@@ -7,7 +7,8 @@
 		"start": "node index.js",
 		"dev": "nodemon --legacy-watch --exitcrash index.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"setup-pre-commit-hooks": "cd .. && husky install .husky && npx husky add .husky/pre-commit \"cd backend && npx lint-staged\""
+		"setup-pre-commit-hooks": "cd .. && husky install .husky && npx husky add .husky/pre-commit \"cd backend && npx lint-staged\"",
+		"format": "npx prettier --write ."
 	},
 	"author": "",
 	"license": "ISC",

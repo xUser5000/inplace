@@ -20,9 +20,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 // public routes (i.e routes where no authorization is required)
-app.get("/", (req, res) => {
-	throw new ForbiddenError("You are not allowed to access this resource");
-});
+app.get("/", (req, res) => console.log("Welcome to Inplace"));
 app.use("/auth", authRouter);
 
 // private routes

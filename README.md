@@ -1,19 +1,39 @@
 # Inplace
 A website that helps you find the right apartment
 
-# Dependencies
-- Docker
-- Docker Compose
+# Prerequisites
 
-# Run
+## Required Tools
+- [Docker](https://docs.docker.com/engine/install/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Node.js](https://nodejs.org/en)
 
-First, you need to rename `backend/.env-example` to `backend/.env` and fill in the missing environment variables.
-
-Then run the following commands to start the backend and database containers
+## Pre-commit hooks:
+This will automatically format the staged files when creating a new commit.
 ```bash
-docker compose build # to build images (you'll need to do this every time backend/package.json changes)
-docker compose up # to start containers
+cd backend
+npm setup-pre-commit-hooks
 ```
 
-# Erase volumes
-If you want to drop the database for example, run `docker compose down -v`
+## Environment variables
+- Rename `backend/.env-example` to `backend/.env`
+- fill in the missing environment variables.
+
+# Basic Commands
+The following commands are available in the root of the project:
+```bash
+docker compose build    # to build images (you'll need to do this once every time backend/package.json changes)
+docker compose up       # to start containers
+docker compose down -v  # to delete containers and erases all volumes (including the database contents)
+```
+
+The following commands are available in the `backend` directory:
+```bash
+npm run format          # to format the backend source files
+```
+
+# Ports
+```
+Backend (Node.js)       -> 3000
+Database (PostgreSQL)   -> 5432
+```

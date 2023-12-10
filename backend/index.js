@@ -11,6 +11,7 @@ require("dotenv").config();
 const sequelize = require("./core/db");
 const { errorHandler, schemaValidator } = require("./core/middlewares");
 const { authRouter } = require("./authentication/router");
+const { userRouter } = require("./users/router");
 const { jwtFilter } = require("./authentication/middlewares");
 
 const app = express();
@@ -26,6 +27,7 @@ app.use("/auth", authRouter);
 // private routes
 app.use(jwtFilter());
 app.get("/private", (req, res) => res.send("OK"));
+app.use("/users", userRouter);
 
 app.use(errorHandler()); // Error handling middleware
 

@@ -12,7 +12,7 @@ A website that helps you find the right apartment
 This will automatically format the staged files when creating a new commit.
 ```bash
 cd backend
-npm setup-pre-commit-hooks
+npm run setup-pre-commit-hooks
 ```
 
 ## Environment variables

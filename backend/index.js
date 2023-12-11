@@ -11,6 +11,7 @@ require("dotenv").config();
 const sequelize = require("./core/db");
 const { errorHandler, schemaValidator } = require("./core/middlewares");
 const { authRouter } = require("./authentication/router");
+const { offersRouter } = require("./offers/routes");
 const { jwtFilter } = require("./authentication/middlewares");
 
 const app = express();
@@ -20,7 +21,8 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 // public routes (i.e routes where no authorization is required)
-app.get("/", (req, res) => console.log("Welcome to Inplace"));
+app.get("/", (req, res) => res.send("ok"));
+app.use("/offers", offersRouter);
 app.use("/auth", authRouter);
 
 // private routes

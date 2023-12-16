@@ -22,12 +22,12 @@ app.use(morgan("dev"));
 
 // public routes (i.e routes where no authorization is required)
 app.get("/", (req, res) => res.send("ok"));
-app.use("/offers", offersRouter);
 app.use("/auth", authRouter);
 
 // private routes
 app.use(jwtFilter());
-app.get("/private", (req, res) => res.send("OK"));
+app.get("/private", (req, res) => res.send("Welcome to inPlace"));
+app.use("/offers", offersRouter);
 
 app.use(errorHandler()); // Error handling middleware
 

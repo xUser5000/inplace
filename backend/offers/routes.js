@@ -10,7 +10,7 @@ offersRouter.get("/offer", async (req, res) => {
 });
 
 offersRouter.get("/offer/:id", async (req, res) => {
-	const offer = await Offer.findById(req.params.id);
+	const offer = await Offer.findByPk(req.params.id);
 	if (!offer) throw new NotFoundError("Offer Not Found!");
 	res.json({ offer });
 });

@@ -18,22 +18,22 @@ offersRouter.get("/offer/:id", async (req, res) => {
 const addOfferSchema = joi.object({
 	longitude: joi.number().min(-180).max(180).required(),
 	latitude: joi.number().min(-90).max(90).required(),
-	images: joi.array().items(joi.string()).required(),
+	images: joi.array().items(joi.string().uri()).min(1).required(),
 	isFurnished: joi.boolean().required(),
-	forSale: joi.boolean().required(),
 	forRent: joi.boolean().required(),
-	cost: joi.number().required(),
+	forSale: joi.boolean().required(),
+	rentCost: joi.number().required(),
+	saleCost: joi.number().required(),
+	capacity: joi.number().integer().required(),
 	floorNumber: joi.number().integer().required(),
 	roomCount: joi.number().integer().required(),
 	bathroomCount: joi.number().integer().required(),
 	bedCount: joi.number().integer().required(),
 	area: joi.number().required(),
-	listOfApplications: joi.array().items(joi.string()).required(),
-	notes: joi.string().required(),
-	description: joi.string().max(50).required(),
-	capacity: joi.number().integer().required()
+	listOfAppliances: joi.array().items(joi.string()),
+	notes: joi.string(),
+	description: joi.string().max(50)
 });
-
 offersRouter.post(
 	"/offer",
 	schemaValidator(addOfferSchema),

@@ -5,23 +5,49 @@ const { STRING, BOOLEAN, INTEGER, DOUBLE, ARRAY } = require("sequelize");
 const Offer = sequelize.define("offers", {
 	longitude: {
 		type: DOUBLE,
-		allowNull: false
+		allowNull: false,
+		validate: {
+			min: -180,
+			max: 180
+		}
 	},
 	latitude: {
 		type: DOUBLE,
-		allowNull: false
+		allowNull: false,
+		validate: {
+			min: -90,
+			max: 90
+		}
 	},
 	images: {
 		type: ARRAY(STRING),
-		allowNull: false
+		allowNull: false,
+		validate: {
+			min: 1,
+			isUrl: true
+		}
 	},
 	isFurnished: {
 		type: BOOLEAN,
 		allowNull: false
 	},
-	cost: {
-		type: DOUBLE,
+	forRent: {
+		type: BOOLEAN,
 		allowNull: false
+	},
+	forSale: {
+		type: BOOLEAN,
+		allowNull: false
+	},
+	rentCost: {
+		type: DOUBLE,
+		allowNull: false,
+		defaultValue: 0
+	},
+	saleCost: {
+		type: DOUBLE,
+		allowNull: false,
+		defaultValue: 0
 	},
 	floorNumber: {
 		type: INTEGER
@@ -38,14 +64,17 @@ const Offer = sequelize.define("offers", {
 	area: {
 		type: DOUBLE
 	},
-	listOfApplications: {
+	listOfAppliances: {
 		type: ARRAY(STRING)
 	},
 	notes: {
 		type: STRING
 	},
 	description: {
-		type: STRING
+		type: STRING,
+		validate: {
+			max: 50
+		}
 	},
 	capacity: {
 		type: INTEGER,

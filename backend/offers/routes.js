@@ -30,9 +30,9 @@ const addOfferSchema = joi.object({
 	bathroomCount: joi.number().integer().required(),
 	bedCount: joi.number().integer().required(),
 	area: joi.number().required(),
-	listOfAppliances: joi.array().items(joi.string()),
+	appliances: joi.array().items(joi.string()),
 	notes: joi.string(),
-	description: joi.string().max(50)
+	description: joi.string().max(50).required()
 });
 offersRouter.post(
 	"/offer",

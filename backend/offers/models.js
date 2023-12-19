@@ -64,7 +64,7 @@ const Offer = sequelize.define("offers", {
 	area: {
 		type: DOUBLE
 	},
-	listOfAppliances: {
+	appliances: {
 		type: ARRAY(STRING)
 	},
 	notes: {
@@ -72,6 +72,7 @@ const Offer = sequelize.define("offers", {
 	},
 	description: {
 		type: STRING,
+		allowNull: false,
 		validate: {
 			max: 50
 		}

@@ -5,8 +5,8 @@ const { NotFoundError } = require("../core/errors");
 const { Offer } = require("./models");
 
 offersRouter.get("/offer", async (req, res) => {
-	const allOffers = await Offer.findAll();
-	res.json({ allOffers });
+	const offers = await Offer.findAll();
+	res.json(offers);
 });
 
 offersRouter.get("/offer/:id", async (req, res) => {

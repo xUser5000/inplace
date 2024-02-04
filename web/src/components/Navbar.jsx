@@ -28,6 +28,10 @@ const Links = [
   {
     value: 'About',
     to: '/about'
+  },
+  {
+    value: 'Login',
+    to: '/login'
   }
 ];
 
@@ -44,10 +48,10 @@ export const NavLink = (props) => {
           rounded={'md'}
           _hover={{
             textDecoration: 'none',
-            bg: useColorModeValue('gray.200', 'gray.700')
+            bg: useColorModeValue('blue.200', 'blue.700')
           }}
           background={isActive ? 'blue.400' : 'none'}
-          color={isActive ? 'white' : 'gray'}
+          color={'white'}
           to={children.to}>
           {children.value}
         </Link>
@@ -61,7 +65,7 @@ export function Navbar() {
 
   return (
     <>
-      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+      <Box bg={useColorModeValue('blue.600', 'blue.900')} px={4}>
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
@@ -72,7 +76,7 @@ export function Navbar() {
           />
           <HStack spacing={8} alignItems={'center'}>
             <Box>
-              <Text as="h3" color={'blue.500'} fontWeight={'bold'}>
+              <Text as="h3" color={'white'} fontWeight={'bold'}>
                 Inplace
               </Text>
             </Box>

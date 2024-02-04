@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userReducer from './userSlice'
-
+import LangaugeReducer from './Lng'
 const store = configureStore({
     reducer: {
-        user: userReducer
+        user: userReducer,
+        lang:LangaugeReducer
     }
 });
 

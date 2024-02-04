@@ -1,6 +1,8 @@
 import { Container, Heading, Stack, Text, Button } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 
 export function Home() {
+  const { t } = useTranslation();
   return (
     <Container maxW={'5xl'}>
       <Stack
@@ -12,9 +14,9 @@ export function Home() {
           fontWeight={600}
           fontSize={{ base: '3xl', sm: '4xl', md: '6xl' }}
           lineHeight={'110%'}>
-          Finding Places{' '}
+    {t( "Finding Places")}
           <Text as={'span'} color={'blue.400'}>
-            made easy
+            {t( "made easy.")}
           </Text>
         </Heading>
         <Text color={'gray.500'} maxW={'3xl'}>

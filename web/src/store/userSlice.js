@@ -1,7 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-// import { useTranslation } from 'react-i18next';
-
-// const { t } = useTranslation();
+import i18n from 'i18next'; // Import i18n instance directly
 
 export const loginUser = createAsyncThunk('user/loginUser', async (userCredentials) => {
   // TODO: Change login api provided by backend
@@ -31,7 +29,7 @@ const userSlice = createSlice({
         state.user = null;
         console.log(action.error.message);
         if (action.error.message === 'Request failed with status code 401') {
-          state.error = t('Access Denied! Invalid Credentials');
+          state.error = i18n.t('Access Denied! Invalid Credentials');
         } else {
           state.error = action.error.message;
         }

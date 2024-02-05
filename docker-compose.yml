@@ -19,13 +19,21 @@ services:
     image: postgres:16-alpine
     environment:
       - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=passowrd
-      - POSTGRES_DB=databaseo
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=database
     ports:
       - "5432:5432"
     volumes:
       - inplace_db_data:/var/lib/postgresql/data
     restart: always
+    networks:
+      - my_network
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"  # SMTP port
+      - "8025:8025"  # Web UI port
     networks:
       - my_network
 

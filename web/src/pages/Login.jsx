@@ -83,7 +83,9 @@ export function Login() {
               onBlur={handleBlur}
               size="md"
             />
-            <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
+            <FormErrorMessage justifyContent={currentLanguage === 'ar' ? 'flex-end' : 'flex-start'}>
+              {t(formik.errors.email)}
+            </FormErrorMessage>
           </FormControl>
 
           <FormControl
@@ -101,11 +103,13 @@ export function Login() {
               onBlur={handleBlur}
               size="md"
             />
-            <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
+            <FormErrorMessage justifyContent={currentLanguage === 'ar' ? 'flex-end' : 'flex-start'}>
+              {t(formik.errors.password)}
+            </FormErrorMessage>
           </FormControl>
 
           <Button type="submit" colorScheme="blue" size="md" width="full" mb={4}>
-            {loading ? 'Loading...' : t('Login')}
+            {loading ? t('Loading...') : t('Login')}
           </Button>
         </form>
 

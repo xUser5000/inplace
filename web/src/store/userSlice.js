@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 
-const { t } = useTranslation();
+// const { t } = useTranslation();
 
 export const loginUser = createAsyncThunk('user/loginUser', async (userCredentials) => {
   // TODO: Change login api provided by backend

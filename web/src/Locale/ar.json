@@ -6,7 +6,11 @@
   "Email": "البريد الإلكتروني",
   "Password": "كلمة السر",
   "Login": "تسجيل الدخول",
+  "Loading...": "جاري التحميل",
   "Create an account": "إنشاء حساب",
   "Can't Login": "حدثت مشكلة",
-  "Access Denied! Invalid Credentials": "البريد الإلكتروني أو كلمة السر غير صحيحة"
+  "Access Denied! Invalid Credentials": "البريد الإلكتروني أو كلمة السر غير صحيحة",
+  "Email is required.": "البريد الإلكتروني مطلوب",
+  "Password is required.": "كلمة السر مطلوبة",
+  "Invalid email address": "البريد الإلكتروني غير صالح"
 }

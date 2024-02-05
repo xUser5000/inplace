@@ -6,7 +6,11 @@
   "Email": "Email",
   "Password": "Password",
   "Login": "Login",
+  "Loading...": "Loading...",
   "Create an account": "Create an account",
   "Can't Login": "Can't Login",
-  "Access Denied! Invalid Credentials": "Access Denied! Invalid Credentials"
+  "Access Denied! Invalid Credentials": "Access Denied! Invalid Credentials",
+  "Email is required.": "Email is required.",
+  "Password is required.": "Password is required.",
+  "Invalid email address": "Invalid email address"
 }

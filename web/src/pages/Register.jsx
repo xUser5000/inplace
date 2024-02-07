@@ -18,6 +18,7 @@ import { registerUser } from '../store/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useTranslation } from 'react-i18next';
 
 const initialValues = {
   first_name: '',
@@ -28,11 +29,24 @@ const initialValues = {
 };
 
 const validationSchema = Yup.object().shape({
-  first_name: Yup.string().required('First name is required.'),
-  last_name: Yup.string().required('Last name is required.'),
+  first_name: Yup.string()
+    .matches(/^\S+$/, 'Must be single word.')
+    .matches(/^\D+$/, 'Invalid name format.')
+    .required('First name is required.'),
+  last_name: Yup.string()
+    .matches(/^\S+$/, 'Must be single word.')
+    .matches(/^\D+$/, 'Invalid name format.')
+    .required('Last name is required.'),
   email: Yup.string().email('Invalid email address').required('Email is required.'),
-  password1: Yup.string().required('Password is required.'),
-  password2: Yup.string().required('Password confirmation is required.')
+  password1: Yup.string()
+    .required('Password is required.')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+}{"':;?/>.<,])(?=.*[a-zA-Z]).{8,}$/,
+      'Passwords is weak.'
+    ),
+  password2: Yup.string()
+    .required('Password confirmation is required.')
+    .oneOf([Yup.ref('password1'), null], 'Passwords must match.')
 });
 
 export function Register() {
@@ -60,6 +74,9 @@ export function Register() {
 
   const { values, handleBlur, handleChange, handleSubmit } = formik;
 
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+
   return (
     <Container
       display={'flex'}
@@ -76,14 +93,16 @@ export function Register() {
         rounded={'md'}
         textAlign={'center'}>
         <Heading color={'blue.400'}>INPLACE</Heading>
-        <Text>Register a new account</Text>
+        <Text>{t('Register a new account')}</Text>
         <form onSubmit={handleSubmit}>
-          <Flex columnGap={2}>
+          <Flex columnGap={2} flexDirection={currentLanguage === 'ar' ? 'row-reverse' : 'row'}>
             <FormControl
               isInvalid={formik.touched.first_name && formik.errors.first_name}
               mb={4}
               size="md">
-              <FormLabel>First Name</FormLabel>
+              <FormLabel float={currentLanguage === 'ar' ? 'right' : 'left'}>
+                {t('First Name')}
+              </FormLabel>
               <Input
                 name="first_name"
                 type="text"
@@ -92,14 +111,19 @@ export function Register() {
                 onBlur={handleBlur}
                 size="md"
               />
-              <FormErrorMessage>{formik.errors.first_name}</FormErrorMessage>
+              <FormErrorMessage
+                justifyContent={currentLanguage === 'ar' ? 'flex-end' : 'flex-start'}>
+                {t(formik.errors.first_name)}
+              </FormErrorMessage>
             </FormControl>
 
             <FormControl
               isInvalid={formik.touched.last_name && formik.errors.last_name}
               mb={4}
               size="md">
-              <FormLabel>Last Name</FormLabel>
+              <FormLabel float={currentLanguage === 'ar' ? 'right' : 'left'}>
+                {t('Last Name')}
+              </FormLabel>
               <Input
                 name="last_name"
                 type="text"
@@ -108,12 +132,15 @@ export function Register() {
                 onBlur={handleBlur}
                 size="md"
               />
-              <FormErrorMessage>{formik.errors.last_name}</FormErrorMessage>
+              <FormErrorMessage
+                justifyContent={currentLanguage === 'ar' ? 'flex-end' : 'flex-start'}>
+                {t(formik.errors.last_name)}
+              </FormErrorMessage>
             </FormControl>
           </Flex>
 
           <FormControl isInvalid={formik.touched.email && formik.errors.email} mb={4} size="md">
-            <FormLabel>Email</FormLabel>
+            <FormLabel float={currentLanguage === 'ar' ? 'right' : 'left'}>{t('Email')}</FormLabel>
             <Input
               name="email"
               type="email"
@@ -122,14 +149,18 @@ export function Register() {
               onBlur={handleBlur}
               size="md"
             />
-            <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
+            <FormErrorMessage justifyContent={currentLanguage === 'ar' ? 'flex-end' : 'flex-start'}>
+              {t(formik.errors.email)}
+            </FormErrorMessage>
           </FormControl>
 
           <FormControl
             isInvalid={formik.touched.password1 && formik.errors.password1}
             mb={4}
             size="md">
-            <FormLabel>Password</FormLabel>
+            <FormLabel float={currentLanguage === 'ar' ? 'right' : 'left'}>
+              {t('Password')}
+            </FormLabel>
             <Input
               name="password1"
               type="password"
@@ -138,14 +169,18 @@ export function Register() {
               onBlur={handleBlur}
               size="md"
             />
-            <FormErrorMessage>{formik.errors.password1}</FormErrorMessage>
+            <FormErrorMessage justifyContent={currentLanguage === 'ar' ? 'flex-end' : 'flex-start'}>
+              {t(formik.errors.password1)}
+            </FormErrorMessage>
           </FormControl>
 
           <FormControl
             isInvalid={formik.touched.password2 && formik.errors.password2}
             mb={4}
             size="md">
-            <FormLabel>Confirm password</FormLabel>
+            <FormLabel float={currentLanguage === 'ar' ? 'right' : 'left'}>
+              {t('Confirm password')}
+            </FormLabel>
             <Input
               name="password2"
               type="password"
@@ -154,20 +189,22 @@ export function Register() {
               onBlur={handleBlur}
               size="md"
             />
-            <FormErrorMessage>{formik.errors.password2}</FormErrorMessage>
+            <FormErrorMessage justifyContent={currentLanguage === 'ar' ? 'flex-end' : 'flex-start'}>
+              {t(formik.errors.password2)}
+            </FormErrorMessage>
           </FormControl>
 
           <Button type="submit" colorScheme="blue" size="md" width="full" mb={4}>
-            {loading ? 'Loading...' : 'Login'}
+            {loading ? t('Loading...') : t('Register')}
           </Button>
         </form>
 
         <Flex justifyContent="space-between" alignItems="center">
-          <Link color={'blue.500'} href="#" textAlign="left">
-            Create an account
+          <Link color={'blue.500'} href="/login" textAlign="left">
+            {t('Login')}
           </Link>
           <Link color={'blue.500'} href="#" textAlign="right">
-            Can't Login
+            {t("Can't Login")}
           </Link>
         </Flex>
       </Box>

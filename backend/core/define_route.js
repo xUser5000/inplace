@@ -82,9 +82,10 @@ const defineRoute = ({
 	};
 	APIDocs.set(docs);
 
-	/* Registering the route */
+	/* Setup joi validation */
 	if (inputSchema) middlewares.push(schemaValidator(inputSchema));
 
+	/* Registering the route */
 	router[method](path, ...middlewares, handler);
 };
 

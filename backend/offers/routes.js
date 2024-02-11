@@ -1,18 +1,34 @@
 const offersRouter = require("express").Router();
 const joi = require("joi");
-const { schemaValidator } = require("../core/middlewares");
+const { defineRoute } = require("../core/define_route");
 const { NotFoundError } = require("../core/errors");
 const { Offer } = require("./models");
 
-offersRouter.get("/offer", async (req, res) => {
-	const offers = await Offer.findAll();
-	res.json(offers);
+const TAG = "Offers";
+
+defineRoute({
+	router: offersRouter,
+	path: "/offers",
+	method: "get",
+	tag: TAG,
+	description: "list all offers",
+	handler: async (req, res) => {
+		const offers = await Offer.findAll();
+		res.json(offers);
+	}
 });
 
-offersRouter.get("/offer/:id", async (req, res) => {
-	const offer = await Offer.findByPk(req.params.id);
-	if (!offer) throw new NotFoundError("Offer Not Found!");
-	res.json(offer);
+defineRoute({
+	router: offersRouter,
+	path: "/offer/:id",
+	method: "get",
+	tag: TAG,
+	description: "get an offer by id",
+	handler: async (req, res) => {
+		const offer = await Offer.findByPk(req.params.id);
+		if (!offer) throw new NotFoundError("Offer Not Found!");
+		res.json(offer);
+	}
 });
 
 const addOfferSchema = joi.object({
@@ -34,12 +50,17 @@ const addOfferSchema = joi.object({
 	notes: joi.string(),
 	description: joi.string().max(50).required()
 });
-offersRouter.post(
-	"/offer",
-	schemaValidator(addOfferSchema),
-	async (req, res) => {
+defineRoute({
+	router: offersRouter,
+	path: "/offer",
+	method: "post",
+	tag: TAG,
+	description: "create a new offer",
+	inputSchema: addOfferSchema,
+	handler: async (req, res) => {
 		const offer = await Offer.create(req.body);
 		res.json(offer);
 	}
-);
+});
+
 module.exports = { offersRouter };

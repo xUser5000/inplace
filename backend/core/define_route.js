@@ -63,13 +63,15 @@ const defineRoute = ({
 			[method]: {
 				summary: description,
 				tags: [tag],
-				requestBody: {
-					content: {
-						"application/json": {
-							schema: j2s(inputSchema).swagger
-						}
-					}
-				}
+				requestBody: inputSchema
+					? {
+							content: {
+								"application/json": {
+									schema: j2s(inputSchema).swagger
+								}
+							}
+					  }
+					: {}
 			}
 		}
 	};
@@ -78,7 +80,9 @@ const defineRoute = ({
 	APIDocs.set(docs);
 
 	/* Registering the route */
-	router[method](path, ...middlewares, schemaValidator(inputSchema), handler);
+	if (inputSchema) middlewares.push(schemaValidator(inputSchema));
+
+	router[method](path, ...middlewares, handler);
 };
 
 module.exports = { defineRoute };

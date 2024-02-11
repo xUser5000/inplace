@@ -76,7 +76,10 @@ const defineRoute = ({
 		}
 	};
 	const docs = APIDocs.get();
-	docs.paths = entry;
+	docs.paths = {
+		...docs.paths,
+		...entry
+	};
 	APIDocs.set(docs);
 
 	/* Registering the route */

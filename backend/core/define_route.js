@@ -5,15 +5,19 @@ const { APIDocs } = require("../docs/swagger");
 
 const defineRoute = ({
 	router,
+	feature,
 	path,
 	method,
-	tag,
 	description,
 	inputSchema,
 	middlewares,
 	handler
 }) => {
 	/* Validation */
+	if (typeof feature !== "string") {
+		throw new TypeError("feature must be a string");
+	}
+
 	if (typeof path !== "string") {
 		throw new TypeError("path must be a string");
 	}
@@ -27,10 +31,6 @@ const defineRoute = ({
 		throw new TypeError(
 			"method must be a valid HTTP method (get, post, put, delete, patch)"
 		);
-	}
-
-	if (tag && typeof tag !== "string") {
-		throw new TypeError("tag must be a string");
 	}
 
 	if (description && typeof description !== "string") {
@@ -59,10 +59,10 @@ const defineRoute = ({
 
 	/* Registering the documentation entry */
 	const entry = {
-		[path]: {
+		["/" + feature + path + "/"]: {
 			[method]: {
 				summary: description,
-				tags: [tag],
+				tags: [feature],
 				requestBody: inputSchema
 					? {
 							content: {

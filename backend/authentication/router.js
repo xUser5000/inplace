@@ -16,7 +16,7 @@ const {
 	compareHash
 } = require("./utils");
 
-const TAG = "Authentication";
+const FEATURE = "auth";
 
 const registerSchema = joi.object({
 	first_name: joi.string().required(),
@@ -38,9 +38,9 @@ const registerSchema = joi.object({
 });
 defineRoute({
 	router: authRouter,
+	feature: FEATURE,
 	path: "/register",
 	method: "post",
-	tag: TAG,
 	description: "Create a new user",
 	inputSchema: registerSchema,
 	handler: async (req, res) => {
@@ -72,9 +72,9 @@ defineRoute({
 
 defineRoute({
 	router: authRouter,
+	feature: FEATURE,
 	path: "/verify/:token",
 	method: "get",
-	tag: TAG,
 	description: "verify the account verification token that was sent in email",
 	handler: async (req, res) => {
 		const tokenString = req.params.token;
@@ -117,9 +117,9 @@ const loginSchema = joi.object({
 });
 defineRoute({
 	router: authRouter,
+	feature: FEATURE,
 	path: "/login",
 	method: "post",
-	tag: TAG,
 	description: "obtain a jwt given email and password ",
 	inputSchema: loginSchema,
 	handler: async (req, res) => {

@@ -4,13 +4,13 @@ const { defineRoute } = require("../core/define_route");
 const { NotFoundError } = require("../core/errors");
 const { Offer } = require("./models");
 
-const TAG = "Offers";
+const FEATURE = "offers";
 
 defineRoute({
 	router: offersRouter,
+	feature: FEATURE,
 	path: "/offers",
 	method: "get",
-	tag: TAG,
 	description: "list all offers",
 	handler: async (req, res) => {
 		const offers = await Offer.findAll();
@@ -20,9 +20,9 @@ defineRoute({
 
 defineRoute({
 	router: offersRouter,
+	feature: FEATURE,
 	path: "/offer/:id",
 	method: "get",
-	tag: TAG,
 	description: "get an offer by id",
 	handler: async (req, res) => {
 		const offer = await Offer.findByPk(req.params.id);
@@ -52,9 +52,9 @@ const addOfferSchema = joi.object({
 });
 defineRoute({
 	router: offersRouter,
+	feature: FEATURE,
 	path: "/offer",
 	method: "post",
-	tag: TAG,
 	description: "create a new offer",
 	inputSchema: addOfferSchema,
 	handler: async (req, res) => {

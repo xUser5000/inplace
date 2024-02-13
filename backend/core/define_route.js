@@ -1,7 +1,7 @@
 const Joi = require("joi");
 const j2s = require("joi-to-swagger");
 const { schemaValidator } = require("./middlewares");
-const { APIDocs } = require("../docs/swagger");
+const { APIDocs } = require("./swagger");
 
 const defineRoute = ({
 	router,

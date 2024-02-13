@@ -2,7 +2,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const swaggerUi = require("swagger-ui-express");
-const { APIDocs } = require("./docs/swagger");
+const { APIDocs } = require("./core/swagger");
 require("express-async-errors");
 
 // environment variables

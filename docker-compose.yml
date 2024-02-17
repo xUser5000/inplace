@@ -2,7 +2,9 @@
 version: "3"
 
 services:
+
   backend:
+    container_name: inplace_local_backend
     build:
       context: ./backend
     depends_on:
@@ -16,6 +18,7 @@ services:
       - my_network
 
   db:
+    container_name: inplace_local_db
     image: postgres:16-alpine
     environment:
       - POSTGRES_USER=user
@@ -30,12 +33,22 @@ services:
       - my_network
 
   mailhog:
+    container_name: inplace_local_mail
     image: mailhog/mailhog
     ports:
       - "1025:1025"  # SMTP port
       - "8025:8025"  # Web UI port
     networks:
       - my_network
+
+  mkdocs:
+    container_name: inplace_local_docs
+    image: squidfunk/mkdocs-material
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./docs:/docs
 
 networks:
   my_network:

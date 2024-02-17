@@ -1,7 +1,7 @@
 const authRouter = require("express").Router();
 const joi = require("joi");
 
-const { schemaValidator } = require("../core/middlewares");
+const { defineRoute } = require("../core/define_route");
 const { sendMail } = require("../core/mailer");
 const { ForbiddenError } = require("../core/errors");
 
@@ -15,6 +15,8 @@ const {
 	hash,
 	compareHash
 } = require("./utils");
+
+const FEATURE = "auth";
 
 const registerSchema = joi.object({
 	first_name: joi.string().required(),
@@ -34,10 +36,14 @@ const registerSchema = joi.object({
 		.messages({ "any.only": "Passwords do not match" })
 		.required()
 });
-authRouter.post(
-	"/register",
-	schemaValidator(registerSchema),
-	async (req, res) => {
+defineRoute({
+	router: authRouter,
+	feature: FEATURE,
+	path: "/register",
+	method: "post",
+	description: "Create a new user",
+	inputSchema: registerSchema,
+	handler: async (req, res) => {
 		if (await User.findOne({ where: { email: req.body.email } })) {
 			throw new ForbiddenError("Email already in use");
 		}
@@ -62,57 +68,71 @@ authRouter.post(
 
 		res.json(user);
 	}
-);
+});
 
-authRouter.get("/verify/:token", async (req, res) => {
-	const tokenString = req.params.token;
+defineRoute({
+	router: authRouter,
+	feature: FEATURE,
+	path: "/verify/:token",
+	method: "get",
+	description: "verify the account verification token that was sent in email",
+	handler: async (req, res) => {
+		const tokenString = req.params.token;
 
-	let verificationTokenRecord = await VerificationToken.findOne({
-		where: { content: tokenString }
-	});
-	if (!verificationTokenRecord) {
-		throw new ForbiddenError("Invalid verification token");
+		let verificationTokenRecord = await VerificationToken.findOne({
+			where: { content: tokenString }
+		});
+		if (!verificationTokenRecord) {
+			throw new ForbiddenError("Invalid verification token");
+		}
+
+		let decodedToken = undefined;
+		try {
+			decodedToken = decodeVerificationToken(tokenString);
+		} catch (err) {
+			throw new ForbiddenError("Invalid verification token");
+		}
+
+		const user = await User.findByPk(decodedToken.userId);
+		if (!user) {
+			throw new ForbiddenError("Invalid verification token");
+		}
+
+		if (user.verified) {
+			throw new ForbiddenError("Your account has already been verified");
+		}
+
+		user.verified = true;
+		await user.save();
+
+		await verificationTokenRecord.destroy();
+
+		res.status(200).send("Your account has been verified!");
 	}
-
-	let decodedToken = undefined;
-	try {
-		decodedToken = decodeVerificationToken(tokenString);
-	} catch (err) {
-		throw new ForbiddenError("Invalid verification token");
-	}
-
-	const user = await User.findByPk(decodedToken.userId);
-	if (!user) {
-		throw new ForbiddenError("Invalid verification token");
-	}
-
-	if (user.verified) {
-		throw new ForbiddenError("Your account has already been verified");
-	}
-
-	user.verified = true;
-	await user.save();
-
-	await verificationTokenRecord.destroy();
-
-	res.status(200).send("Your account has been verified!");
 });
 
 const loginSchema = joi.object({
 	email: joi.string().email().required(),
 	password: joi.string().required()
 });
-
-authRouter.post("/login", schemaValidator(loginSchema), async (req, res) => {
-	const { email, password } = req.body;
-	const user = await User.findOne({ where: { email } });
-	if (!user || !(await compareHash(password, user.password)))
-		throw new ForbiddenError("invalid Email or password!");
-	const token = generateAuthorizationToken(user.id);
-	res.json({
-		token,
-		user
-	});
+defineRoute({
+	router: authRouter,
+	feature: FEATURE,
+	path: "/login",
+	method: "post",
+	description: "obtain a jwt given email and password ",
+	inputSchema: loginSchema,
+	handler: async (req, res) => {
+		const { email, password } = req.body;
+		const user = await User.findOne({ where: { email } });
+		if (!user || !(await compareHash(password, user.password)))
+			throw new ForbiddenError("invalid Email or password!");
+		const token = generateAuthorizationToken(user.id);
+		res.json({
+			token,
+			user
+		});
+	}
 });
 
 module.exports = { authRouter };

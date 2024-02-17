@@ -1,0 +1,4 @@
+site_name: Inplace Docs
+docs_dir: md
+theme:
+  name: material

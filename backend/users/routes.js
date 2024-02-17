@@ -3,10 +3,6 @@ const userRouter = require("express").Router();
 const joi = require("joi");
 const { defineRoute } = require("../core/define_route");
 const FEATURE = "users";
-
-userRouter.get("/get-all-users", async (req, res) => {
-	res.json(await User.findAll());
-});
 const updateProfileSchema = joi.object({
 	first_name: joi.string(),
 	last_name: joi.string()

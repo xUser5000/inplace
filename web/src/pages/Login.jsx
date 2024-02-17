@@ -11,22 +11,23 @@ import {
   Heading,
   Text,
   Flex,
-  Link,
+  Link
 } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../store/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useTranslation } from 'react-i18next';
 
 const initialValues = {
   email: '',
-  password: '',
+  password: ''
 };
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email address').required('Email is required.'),
-  password: Yup.string().required('Password is required.'),
+  password: Yup.string().required('Password is required.')
 });
 
 export function Login() {
@@ -46,10 +47,13 @@ export function Login() {
       } catch (error) {
         // Handle login error
       }
-    },
+    }
   });
 
   const { values, handleBlur, handleChange, handleSubmit } = formik;
+  const { t, i18n } = useTranslation();
+
+  const currentLanguage = i18n.language;
 
   return (
     <Container
@@ -57,8 +61,7 @@ export function Login() {
       flexDir={'column'}
       justifyContent={'center'}
       alignItems={'center'}
-      h="80vh"
-    >
+      h="80vh">
       <Box
         p={8}
         maxW={'400px'}
@@ -66,13 +69,12 @@ export function Login() {
         bg={'white'}
         boxShadow={'md'}
         rounded={'md'}
-        textAlign={'center'}
-      >
+        textAlign={'center'}>
         <Heading color={'blue.400'}>INPLACE</Heading>
-        <Text>Login to continue</Text>
+        <Text>{t('Login to continue')}</Text>
         <form onSubmit={handleSubmit}>
           <FormControl isInvalid={formik.touched.email && formik.errors.email} mb={4} size="md">
-            <FormLabel>Email</FormLabel>
+            <FormLabel float={currentLanguage === 'ar' ? 'right' : 'left'}>{t('Email')}</FormLabel>{' '}
             <Input
               name="email"
               type="email"
@@ -81,11 +83,18 @@ export function Login() {
               onBlur={handleBlur}
               size="md"
             />
-            <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
+            <FormErrorMessage justifyContent={currentLanguage === 'ar' ? 'flex-end' : 'flex-start'}>
+              {t(formik.errors.email)}
+            </FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={formik.touched.password && formik.errors.password} mb={4} size="md">
-            <FormLabel>Password</FormLabel>
+          <FormControl
+            isInvalid={formik.touched.password && formik.errors.password}
+            mb={4}
+            size="md">
+            <FormLabel float={currentLanguage === 'ar' ? 'right' : 'left'}>
+              {t('Password')}
+            </FormLabel>
             <Input
               name="password"
               type="password"
@@ -94,20 +103,22 @@ export function Login() {
               onBlur={handleBlur}
               size="md"
             />
-            <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
+            <FormErrorMessage justifyContent={currentLanguage === 'ar' ? 'flex-end' : 'flex-start'}>
+              {t(formik.errors.password)}
+            </FormErrorMessage>
           </FormControl>
 
-          <Button type="submit" colorScheme="blue" size="md"  width="full"  mb={4}>
-            {loading ? 'Loading...' : 'Login'}
+          <Button type="submit" colorScheme="blue" size="md" width="full" mb={4}>
+            {loading ? t('Loading...') : t('Login')}
           </Button>
         </form>
 
         <Flex justifyContent="space-between" alignItems="center">
-          <Link color={"blue.500"} href="#" textAlign="left">
-            Create an account
+          <Link color={'blue.500'} href="#" textAlign="left">
+            {t('Create an account')}
           </Link>
-          <Link color={"blue.500"} href="#" textAlign="right">
-            Can't Login
+          <Link color={'blue.500'} href="#" textAlign="right">
+            {t("Can't Login")}
           </Link>
         </Flex>
       </Box>

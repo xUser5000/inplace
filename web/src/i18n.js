@@ -5,15 +5,15 @@ import enTranslations from './Locale/en.json';
 import arTranslations from './Locale/ar.json';
 
 i18n.use(initReactI18next).init({
-  lng: 'en',
+  lng: 'ar',
   fallbackLng: 'en',
   resources: {
     en: {
-      translation: enTranslations,
+      translation: enTranslations
     },
     ar: {
-      translation: arTranslations,
-    },
-  },
+      translation: arTranslations
+    }
+  }
 });
-export default i18n
+export default i18n;

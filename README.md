@@ -34,8 +34,9 @@ npm run format          # to format the backend source files
 
 # Ports
 ```
-Backend (Node.js)       -> 3000
-Database (PostgreSQL)   -> 5432
-Mailhog SMTP            -> 1025
-Mailhog Web UI          -> 8025 
+Backend (Node.js)               -> 3000
+Database (PostgreSQL)           -> 5432
+Mailhog SMTP                    -> 1025
+Mailhog Web UI                  -> 8025
+MKDocs internal documentation   -> 8000
 ```

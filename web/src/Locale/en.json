@@ -3,6 +3,10 @@
   "made easy.": "made easy.",
   "Discover a world of possibilities with Inplace and join the community that's transforming the way we rent and share rooms.": "Discover a world of possibilities with Inplace and join the community that's transforming the way we rent and share rooms.",
   "Login to continue": "Login to continue",
+
+
+  "Register a new account": "تسجيل حساب جديد",
+
   "Email": "Email",
   "Password": "Password",
   "Login": "Login",
@@ -10,7 +14,24 @@
   "Create an account": "Create an account",
   "Can't Login": "Can't Login",
   "Access Denied! Invalid Credentials": "Access Denied! Invalid Credentials",
+
   "Email is required.": "Email is required.",
   "Password is required.": "Password is required.",
   "Invalid email address": "Invalid email address"
+
+  "First name is required.": "First name is required.",
+  "Last name is required.": "Last name is required.",
+  "Password confirmation is required.": "Password confirmation is required.",
+  "Email is required.": "Email is required.",
+  "Password is required.": "Password is required.",
+  "Invalid email address": "Invalid email address",
+  "First Name": "First name",
+  "Last Name": "Last Name",
+  "Confirm password": "Confirm password",
+  "Register": "Register",
+  "Invalid name format.": "Invalid name format.",
+  "Passwords is weak.": "Passwords is weak.",
+  "Passwords must match.": "Passwords must match.",
+  "Must be single word.": "Must be single word."
+
 }

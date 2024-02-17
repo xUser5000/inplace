@@ -18,10 +18,7 @@ const errorHandler = () => {
 
 const schemaValidator = (schema) => {
 	return (req, res, next) => {
-		const result = schema.validate(req.body, {
-			presence: "required",
-			abortEarly: false
-		});
+		const result = schema.validate(req.body, { abortEarly: false });
 		if (result.error) {
 			const errors = result.error.details.reduce((acc, error) => {
 				console.log(error);

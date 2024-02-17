@@ -1,7 +1,8 @@
 // Libraries
 const express = require("express");
 const morgan = require("morgan");
-const joi = require("joi");
+const swaggerUi = require("swagger-ui-express");
+const { APIDocs } = require("./core/swagger");
 require("express-async-errors");
 
 // environment variables
@@ -9,8 +10,9 @@ require("dotenv").config();
 
 // Custom modules
 const sequelize = require("./core/db");
-const { errorHandler, schemaValidator } = require("./core/middlewares");
+const { errorHandler } = require("./core/middlewares");
 const { authRouter } = require("./authentication/router");
+const { offersRouter } = require("./offers/routes");
 const { jwtFilter } = require("./authentication/middlewares");
 
 const app = express();
@@ -20,12 +22,15 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 // public routes (i.e routes where no authorization is required)
-app.get("/", (req, res) => console.log("Welcome to Inplace"));
+app.get("/", (req, res) => res.send("ok"));
 app.use("/auth", authRouter);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(APIDocs.get()));
 
 // private routes
 app.use(jwtFilter());
-app.get("/private", (req, res) => res.send("OK"));
+app.get("/private", (req, res) => res.send("Welcome to inPlace"));
+app.use("/offers", offersRouter);
 
 app.use(errorHandler()); // Error handling middleware
 

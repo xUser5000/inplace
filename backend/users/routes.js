@@ -1,15 +1,37 @@
-const { User } = require("./models");
-const userRouter = require("express").Router();
 const joi = require("joi");
+
 const { defineRoute } = require("../core/define_route");
+const { NotFoundError } = require("../core/errors");
+
+const { User } = require("./models");
+
+const userRouter = require("express").Router();
 
 const FEATURE = "users";
+
+defineRoute({
+	router: userRouter,
+	feature: FEATURE,
+	path: "/details/:id",
+	method: "get",
+	description: "Get user details",
+	handler: async (req, res) => {
+		const userId = req.params.id;
+
+		const user = await User.findByPk(userId);
+
+		if (!user) {
+			throw new NotFoundError("User Not Found");
+		}
+
+		res.json(user);
+	}
+});
 
 const updateProfileSchema = joi.object({
 	first_name: joi.string(),
 	last_name: joi.string()
 });
-
 defineRoute({
 	router: userRouter,
 	feature: FEATURE,

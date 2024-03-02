@@ -2,6 +2,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const swaggerUi = require("swagger-ui-express");
+const cors = require("cors");
 const { APIDocs } = require("./core/swagger");
 require("express-async-errors");
 
@@ -19,6 +20,7 @@ const { jwtFilter } = require("./authentication/middlewares");
 const app = express();
 
 // Global Middlewares
+app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 

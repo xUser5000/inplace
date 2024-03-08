@@ -2,7 +2,7 @@ const fs = require("fs");
 const sequelize = require("./../core/db.js");
 const { User } = require("./../users/models.js");
 const { Offer } = require("./../offers/models.js");
-const { off } = require("process");
+
 (async () => {
 	try {
 		await sequelize.authenticate();

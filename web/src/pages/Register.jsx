@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Container,
   FormControl,
@@ -6,6 +5,7 @@ import {
   Button,
   FormLabel,
   Alert,
+  AlertTitle,
   FormErrorMessage,
   Box,
   Heading,
@@ -13,6 +13,7 @@ import {
   Flex,
   Link
 } from '@chakra-ui/react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../store/userSlice';
 import { useNavigate } from 'react-router-dom';
@@ -24,8 +25,8 @@ const initialValues = {
   first_name: '',
   last_name: '',
   email: '',
-  password1: '',
-  password2: ''
+  password: '',
+  confirm_password: ''
 };
 
 const validationSchema = Yup.object().shape({
@@ -38,36 +39,34 @@ const validationSchema = Yup.object().shape({
     .matches(/^\D+$/, 'Invalid name format.')
     .required('Last name is required.'),
   email: Yup.string().email('Invalid email address').required('Email is required.'),
-  password1: Yup.string()
+  password: Yup.string()
     .required('Password is required.')
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+}{"':;?/>.<,])(?=.*[a-zA-Z]).{8,}$/,
       'Passwords is weak.'
     ),
-  password2: Yup.string()
+  confirm_password: Yup.string()
     .required('Password confirmation is required.')
-    .oneOf([Yup.ref('password1'), null], 'Passwords must match.')
+    .oneOf([Yup.ref('password'), null], 'Passwords must match.')
 });
 
 export function Register() {
   const { loading, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [loginError, setLoginError] = useState('');
 
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
       try {
-        await dispatch(registerUser(values));
-        setFirstName('');
-        setLastName('');
-        setEmail('');
-        setPassword1('');
-        setPassword2('');
+        dispatch(registerUser(values));
+        formik.resetForm();
         navigate('/');
       } catch (error) {
-        // Handle Register error
+        console.log('Login Error: ' + error);
+        setLoginError(t(error));
       }
     }
   });
@@ -94,6 +93,16 @@ export function Register() {
         textAlign={'center'}>
         <Heading color={'blue.400'}>INPLACE</Heading>
         <Text>{t('Register a new account')}</Text>
+        {loginError && (
+          <Alert
+            justifyContent={currentLanguage === 'ar' ? 'end' : 'start'}
+            status="error"
+            mb={4}
+            borderRadius={'5px'}
+            margin={'10px auto'}>
+            <AlertTitle>{loginError}</AlertTitle>
+          </Alert>
+        )}
         <form onSubmit={handleSubmit}>
           <Flex columnGap={2} flexDirection={currentLanguage === 'ar' ? 'row-reverse' : 'row'}>
             <FormControl
@@ -155,42 +164,42 @@ export function Register() {
           </FormControl>
 
           <FormControl
-            isInvalid={formik.touched.password1 && formik.errors.password1}
+            isInvalid={formik.touched.password && formik.errors.password}
             mb={4}
             size="md">
             <FormLabel float={currentLanguage === 'ar' ? 'right' : 'left'}>
               {t('Password')}
             </FormLabel>
             <Input
-              name="password1"
+              name="password"
               type="password"
-              value={values.password1}
+              value={values.password}
               onChange={handleChange}
               onBlur={handleBlur}
               size="md"
             />
             <FormErrorMessage justifyContent={currentLanguage === 'ar' ? 'flex-end' : 'flex-start'}>
-              {t(formik.errors.password1)}
+              {t(formik.errors.password)}
             </FormErrorMessage>
           </FormControl>
 
           <FormControl
-            isInvalid={formik.touched.password2 && formik.errors.password2}
+            isInvalid={formik.touched.confirm_password && formik.errors.confirm_password}
             mb={4}
             size="md">
             <FormLabel float={currentLanguage === 'ar' ? 'right' : 'left'}>
               {t('Confirm password')}
             </FormLabel>
             <Input
-              name="password2"
+              name="confirm_password"
               type="password"
-              value={values.password2}
+              value={values.confirm_password}
               onChange={handleChange}
               onBlur={handleBlur}
               size="md"
             />
             <FormErrorMessage justifyContent={currentLanguage === 'ar' ? 'flex-end' : 'flex-start'}>
-              {t(formik.errors.password2)}
+              {t(formik.errors.confirm_password)}
             </FormErrorMessage>
           </FormControl>
 

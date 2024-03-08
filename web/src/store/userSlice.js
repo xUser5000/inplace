@@ -2,25 +2,54 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import i18n from 'i18next'; // Import i18n instance directly
 
-
 export const loginUser = createAsyncThunk('user/loginUser', async (userCredentials) => {
-  // TODO: Change login api provided by backend
-  const request = await axios.get(`...`, userCredentials);
-  const response = await request.data.data;
-  console.log(response);
-  localStorage.setItem('user', JSON.stringify(response));
-  return response;
-});
+  try {
+    const response = await fetch(`http://localhost:3000/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(userCredentials)
+    });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to log in');
+    }
+
+    const responseData = await response.json();
+    localStorage.setItem('user', JSON.stringify(responseData));
+    return responseData;
+  } catch (error) {
+    console.error('Error logging in:', error.message);
+    throw error;
+  }
+});
 
 export const registerUser = createAsyncThunk('user/registerUser', async (userCredentials) => {
-  const request = await axios.get(`...`, userCredentials);
-  const response = await request.data.data;
-  console.log(response);
-  localStorage.setItem('user', JSON.stringify(response));
-  return response;
-});
+  try {
+    const response = await fetch(`http://localhost:3000/auth/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(userCredentials)
+    });
 
+    if (!response.ok) {
+      const responseData = await response.json();
+      throw new Error(responseData.message || 'Failed to register user');
+    }
+
+    const responseData = await response.json();
+    console.log(responseData);
+    localStorage.setItem('user', JSON.stringify(responseData));
+    return responseData;
+  } catch (error) {
+    console.error('Error registering user:', error.message);
+    throw error;
+  }
+});
 
 const userSlice = createSlice({
   name: 'user',
@@ -38,16 +67,13 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
+        state.user = action.payload;
+        state.error = null; // Reset error when login is successful
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
         state.user = null;
-        console.log(action.error.message);
-        if (action.error.message === 'Request failed with status code 401') {
-
-          state.error = i18n.t('Access Denied! Invalid Credentials');
-
-
-        } else {
-          state.error = action.error.message;
-        }
+        state.error = action.error.message || i18n.t('Failed to log in');
       });
   }
 });

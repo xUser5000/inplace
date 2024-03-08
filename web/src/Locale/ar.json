@@ -16,7 +16,7 @@
 
   "Email is required.": "البريد الإلكتروني مطلوب",
   "Password is required.": "كلمة السر مطلوبة",
-  "Invalid email address": "البريد الإلكتروني غير صالح"
+  "Invalid email address": "البريد الإلكتروني غير صالح",
 
   "First name is required.": ".الاسم الأول مطلوب",
   "Last name is required.": "اسم العائلة مطلوب",
@@ -32,6 +32,6 @@
   "Invalid name format.": "الاسم غير مقبول",
   "Passwords is weak.": "كلمة السر ضعيفة",
   "Passwords must match.": "كلمتا السر غير متطابقتين",
-  "Must be single word.": "يجب أن يكون كلمة واحدة"
-
+  "Must be single word.": "يجب أن يكون كلمة واحدة",
+  "Error logging in: invalid Email or password!": ".البريد الإلكتروني أو كلمة المرور خاطئة"
 }

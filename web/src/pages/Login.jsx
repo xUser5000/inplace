@@ -11,7 +11,8 @@ import {
   Heading,
   Text,
   Flex,
-  Link
+  Link,
+  AlertTitle
 } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../store/userSlice';
@@ -31,9 +32,10 @@ const validationSchema = Yup.object().shape({
 });
 
 export function Login() {
-  const { loading, error } = useSelector((state) => state.user);
+  const { loading, error, user } = useSelector((state) => state.user); // Add user selector
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
+  const navigateTo = useNavigate();
 
   const formik = useFormik({
     initialValues,
@@ -41,19 +43,20 @@ export function Login() {
     onSubmit: async (values) => {
       try {
         await dispatch(loginUser(values));
-        setEmail('');
-        setPassword('');
-        navigate('/');
+        // No need for redirection here since Redirect component will handle it automatically
       } catch (error) {
-        // Handle login error
+        console.error('Error logging in:', error.message);
       }
     }
   });
 
   const { values, handleBlur, handleChange, handleSubmit } = formik;
-  const { t, i18n } = useTranslation();
-
   const currentLanguage = i18n.language;
+
+  // If user is authenticated, redirect to the main page
+  if (user) {
+    navigateTo('/');
+  }
 
   return (
     <Container
@@ -72,9 +75,19 @@ export function Login() {
         textAlign={'center'}>
         <Heading color={'blue.400'}>INPLACE</Heading>
         <Text>{t('Login to continue')}</Text>
+        {error && (
+          <Alert
+            justifyContent={currentLanguage === 'ar' ? 'end' : 'start'}
+            status="error"
+            mb={4}
+            borderRadius={'5px'}
+            margin={'10px auto'}>
+            <AlertTitle>{error}</AlertTitle>
+          </Alert>
+        )}
         <form onSubmit={handleSubmit}>
           <FormControl isInvalid={formik.touched.email && formik.errors.email} mb={4} size="md">
-            <FormLabel float={currentLanguage === 'ar' ? 'right' : 'left'}>{t('Email')}</FormLabel>{' '}
+            <FormLabel float={currentLanguage === 'ar' ? 'right' : 'left'}>{t('Email')}</FormLabel>
             <Input
               name="email"
               type="email"
@@ -87,7 +100,6 @@ export function Login() {
               {t(formik.errors.email)}
             </FormErrorMessage>
           </FormControl>
-
           <FormControl
             isInvalid={formik.touched.password && formik.errors.password}
             mb={4}
@@ -107,14 +119,12 @@ export function Login() {
               {t(formik.errors.password)}
             </FormErrorMessage>
           </FormControl>
-
           <Button type="submit" colorScheme="blue" size="md" width="full" mb={4}>
-            {loading ? t('Loading...') : t('Login')}
+            {t('Login')}
           </Button>
         </form>
-
         <Flex justifyContent="space-between" alignItems="center">
-          <Link color={'blue.500'} href="#" textAlign="left">
+          <Link color={'blue.500'} href="/register" textAlign="left">
             {t('Create an account')}
           </Link>
           <Link color={'blue.500'} href="#" textAlign="right">

@@ -14,13 +14,15 @@ const { Offer } = require("./../offers/models.js");
 	}
 })();
 
-// READ JSON FILE
+// READ JSON FILES
 const offers = JSON.parse(
 	fs.readFileSync(`${__dirname}/offers-dev-data.json`, "utf-8")
 );
 const users = JSON.parse(
 	fs.readFileSync(`${__dirname}/users-dev-data.json`, "utf-8")
 );
+
+// IMPORTING ALL DATA FROM THE JSON FILES
 const importData = async () => {
 	try {
 		await Offer.bulkCreate(offers, { individualHooks: true });

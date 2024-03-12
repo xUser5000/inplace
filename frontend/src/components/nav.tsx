@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 import { Link } from "react-router-dom"
 import { ModeToggle } from "./theme-toggle"
 import { Logo } from "./Logo"
+import { Button } from "./ui/button"
 
 export function Nav({
     className,
@@ -30,7 +31,14 @@ export function Nav({
                 </Link>
 
             </div>
-            <ModeToggle />
+            <div className="flex items-center space-x-4">
+                <Button size={"sm"} asChild>
+                    <Link to="/login">
+                        login
+                    </Link>
+                </Button>
+                <ModeToggle />
+            </div>
         </nav>
     )
 }

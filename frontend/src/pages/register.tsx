@@ -18,11 +18,11 @@ import { Link } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 const registerFormSchema: any = z.object({
-    firstName: z.string().min(5),
-    lastName: z.string().min(5),
+    firstName: z.string().min(2),
+    lastName: z.string().min(2),
     email: z.string().email(),
-    password: z.string().min(5),
-    passwordConfirmation: z.string().min(5),
+    password: z.string().min(8),
+    passwordConfirmation: z.string().min(8),
 }).refine(data => data.password === data.passwordConfirmation, {
     message: "Password and password confirmation must match",
     path: ["passwordConfirmation"],

@@ -18,12 +18,8 @@ import { Link } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 const formSchema = z.object({
-    email: z.string().email().min(2, {
-        message: "Email field must be valid meail",
-    }),
-    password: z.string().min(2, {
-        message: "Password must be at least 2 characters",
-    }),
+    email: z.string().email(),
+    password: z.string().min(8),
 })
 
 

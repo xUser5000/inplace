@@ -46,7 +46,7 @@ export function Register() {
     }
 
     return (
-        <Card className=" w-[450px] mx-auto ">
+        <Card className="  w-[350px] md:w-[450px] mx-auto ">
             <CardHeader>
                 <CardTitle>Register</CardTitle>
             </CardHeader>

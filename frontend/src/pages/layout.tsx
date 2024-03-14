@@ -1,5 +1,5 @@
 import { Nav } from '@/components/nav';
-import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeProvider } from '@/components/providers/theme-provider';
 import { Outlet } from 'react-router-dom';
 
 export function Layout() {

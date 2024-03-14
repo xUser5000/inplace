@@ -5,11 +5,14 @@ import { Link } from "react-router-dom"
 import { ModeToggle } from "./theme-toggle"
 import { Logo } from "./Logo"
 import { Button } from "./ui/button"
+import { useAuth } from "./providers/auth-provider"
 
 export function Nav({
     className,
     ...props
 }: React.HTMLAttributes<HTMLElement>) {
+    const { user } = useAuth()
+
     return (
         <nav
             className={cn("w-full px-8 py-4 flex items-center justify-between space-x-4 lg:space-x-6 border-b ", className)}
@@ -32,11 +35,13 @@ export function Nav({
 
             </div>
             <div className="flex items-center space-x-4">
-                <Button size={"sm"} asChild>
-                    <Link to="/login">
-                        login
-                    </Link>
-                </Button>
+                {
+                    user ? user.first_name : <Button size={"sm"} asChild>
+                        <Link to="/login">
+                            login
+                        </Link>
+                    </Button>
+                }
                 <ModeToggle />
             </div>
         </nav>

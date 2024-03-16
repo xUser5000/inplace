@@ -7,13 +7,15 @@ interface AuthContextProps {
     token: string | null;
     login: (userData: { user: User; token: string }) => void;
     logout: () => void;
+    loading: boolean;
 }
 
-const AuthContext = createContext<AuthContextProps>({
+export const AuthContext = createContext<AuthContextProps>({
     user: null,
     token: null,
     login: () => { },
     logout: () => { },
+    loading: false
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -21,6 +23,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
 
     const login = (userData: { user: User; token: string }) => {
         setUser(userData.user);
@@ -38,20 +41,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     };
 
-    // Check if there's a token in local storage on component mount
     useEffect(() => {
+        setLoading(true)
         const storedToken = localStorage.getItem('token');
         const storedUser = localStorage.getItem('user');
+
 
         if (storedToken && storedUser) {
             setToken(storedToken);
             setUser(JSON.parse(storedUser));
-            // You might want to fetch user data using the token here
+            setLoading(false);
         }
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout }}>
+        <AuthContext.Provider value={{ user, token, login, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );

@@ -3,6 +3,9 @@ import { Layout } from './pages/layout.tsx'
 import { Login } from './pages/login.tsx'
 import { Home } from './pages/home.tsx'
 import { Register } from './pages/register.tsx'
+import { PrivateRoute } from './components/private-route.tsx'
+
+
 
 export function App() {
     return (
@@ -14,7 +17,10 @@ export function App() {
                 <Route index element={<Home />} />
                 <Route path='/login' element={<Login />} />
                 <Route path='/register' element={<Register />} />
-                <Route path='*' element={<h1>Not Found</h1>} />
+                <Route path='*' element={<h1>Not Found</h1>} />j
+                <Route path='/dashboard' element={<PrivateRoute />} >
+                </Route>
+
             </Route>
 
         </Routes>

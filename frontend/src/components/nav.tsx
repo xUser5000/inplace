@@ -4,7 +4,7 @@ import { ModeToggle } from "./theme-toggle";
 import { Logo } from "./Logo";
 import { Button } from "./ui/button";
 import { useAuth } from "./providers/auth-provider";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,

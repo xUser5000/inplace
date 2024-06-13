@@ -32,6 +32,7 @@ defineRoute({
 });
 
 const addOfferSchema = joi.object({
+	title: joi.string().required(),
 	longitude: joi.number().min(-180).max(180).required(),
 	latitude: joi.number().min(-90).max(90).required(),
 	images: joi.array().items(joi.string().uri()).min(1).required(),
@@ -48,7 +49,7 @@ const addOfferSchema = joi.object({
 	area: joi.number().required(),
 	appliances: joi.array().items(joi.string()),
 	notes: joi.string(),
-	description: joi.string().max(50).required()
+	description: joi.string().required()
 });
 defineRoute({
 	router: offersRouter,

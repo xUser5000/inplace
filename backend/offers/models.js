@@ -3,6 +3,10 @@ const sequelize = require("../core/db");
 const { STRING, BOOLEAN, INTEGER, DOUBLE, ARRAY } = require("sequelize");
 
 const Offer = sequelize.define("offers", {
+	title: {
+		type: STRING,
+		allowNull: false,
+	},
 	longitude: {
 		type: DOUBLE,
 		allowNull: false,

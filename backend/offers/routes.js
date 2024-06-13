@@ -3,6 +3,7 @@ const joi = require("joi");
 const { defineRoute } = require("../core/define_route");
 const { NotFoundError } = require("../core/errors");
 const { Offer } = require("./models");
+const { upload } = require("./../core/middlewares");
 
 const FEATURE = "offers";
 
@@ -57,6 +58,7 @@ defineRoute({
 	method: "post",
 	description: "create a new offer",
 	inputSchema: addOfferSchema,
+	middlewares: [upload.array("images")],
 	handler: async (req, res) => {
 		const offer = await Offer.create(req.body);
 		res.json(offer);

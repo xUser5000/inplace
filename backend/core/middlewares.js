@@ -1,4 +1,5 @@
 const joi = require("joi");
+const multer = require("multer");
 const { APIError, ValidationError } = require("./errors");
 
 const errorHandler = () => {
@@ -40,4 +41,24 @@ const schemaValidator = (schema) => {
 	};
 };
 
-module.exports = { errorHandler, schemaValidator };
+const storage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, "/home/ashraf22/inplace/backend/core/images");
+	},
+	filename: (req, file, cb) => {
+		cb(null, Date.now() + "__" + file.originalname);
+	}
+});
+
+multerFilter = (req, file, cb) => {
+	if (file.mimetype.startsWith("image")) {
+		cb(null, true);
+	} else throw new ValidationError("only imgs allowed");
+};
+
+const upload = multer({
+	storage: storage,
+	fileFilter: multerFilter
+});
+
+module.exports = { errorHandler, schemaValidator, upload };

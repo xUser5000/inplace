@@ -9,7 +9,7 @@ const Offer = sequelize.define("offers", {
 	},
 	longitude: {
 		type: DOUBLE,
-		allowNull: false,
+		allowNull: true,
 		validate: {
 			min: -180,
 			max: 180
@@ -17,7 +17,7 @@ const Offer = sequelize.define("offers", {
 	},
 	latitude: {
 		type: DOUBLE,
-		allowNull: false,
+		allowNull: true,
 		validate: {
 			min: -90,
 			max: 90
@@ -25,7 +25,7 @@ const Offer = sequelize.define("offers", {
 	},
 	images: {
 		type: ARRAY(STRING),
-		allowNull: false,
+		allowNull: true,
 		validate: {
 			min: 1,
 			isUrl: true

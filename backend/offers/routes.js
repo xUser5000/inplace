@@ -33,8 +33,8 @@ defineRoute({
 
 const addOfferSchema = joi.object({
 	title: joi.string().required(),
-	longitude: joi.number().min(-180).max(180).required(),
-	latitude: joi.number().min(-90).max(90).required(),
+	// longitude: joi.number().min(-180).max(180).required(),
+	// latitude: joi.number().min(-90).max(90).required(),
 	images: joi.array().items(joi.string().uri()).min(1).required(),
 	isFurnished: joi.boolean().required(),
 	forRent: joi.boolean().required(),

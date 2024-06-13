@@ -7,7 +7,7 @@ export function Layout() {
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
             <div className='min-h-screen flex flex-col' >
                 <Nav />
-                <div className="container flex-1 flex flex-col items-center justify-center">
+                <div className="container flex-1 flex flex-col items-center justify-start">
                     <Outlet />
                 </div>
             </div>

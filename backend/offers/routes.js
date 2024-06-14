@@ -3,7 +3,7 @@ const joi = require("joi");
 const { defineRoute } = require("../core/define_route");
 const { NotFoundError } = require("../core/errors");
 const { Offer } = require("./models");
-const { upload } = require("./../core/middlewares");
+const { upload, editImg } = require("./../core/middlewares");
 const cloudinary = require("./../core/cloudinary");
 
 const FEATURE = "offers";
@@ -72,13 +72,28 @@ defineRoute({
 	path: "/offer/:id",
 	method: "patch",
 	description: "upload offer images",
-	middlewares: [upload.array("images")],
+	middlewares: [upload.array("images"), editImg],
 	handler: async (req, res) => {
 		const offer = await Offer.findByPk(req.params.id);
+		// Access the uploaded files through req.files
 		const images = req.files;
-		offer.images = [];
-		offer.images = images.map((img) => img.path);
-		await offer.save();
+		let imgsUrls = [];
+
+		images.forEach((file) => {
+			// Upload image buffer to Cloudinary
+			const imagebuffer = file.buffer;
+			cloudinary.uploader
+				.upload_stream({ resource_type: "image" }, (error, result) => {
+					if (error) {
+						return new NotFoundError("not found!");
+					}
+					// Image uploaded successfully to Cloudinary
+
+					console.log("Uploaded to Cloudinary:", result.url);
+				})
+				.end(imagebuffer);
+		});
+
 		res.json(offer);
 	}
 });

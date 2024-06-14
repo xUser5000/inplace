@@ -1,5 +1,6 @@
 const joi = require("joi");
 const multer = require("multer");
+const sharp = require("sharp");
 const { APIError, ValidationError } = require("./errors");
 
 const errorHandler = () => {
@@ -41,14 +42,28 @@ const schemaValidator = (schema) => {
 	};
 };
 
-const storage = multer.diskStorage({
-	destination: (req, file, cb) => {
-		cb(null, "/home/ashraf22/inplace/backend/images");
-	},
-	filename: (req, file, cb) => {
-		cb(null, Date.now() + "__" + file.originalname);
-	}
-});
+// const storage = multer.diskStorage({
+// 	destination: (req, file, cb) => {
+// 		cb(null, "/home/ashraf22/inplace/backend/images");
+// 	},
+// 	filename: (req, file, cb) => {
+// 		cb(null, Date.now() + "__" + file.originalname);
+// 	}
+// });
+
+const storage = multer.memoryStorage();
+
+const editImg = (req, res, next) => {
+	const imgs = req.files;
+	imgs.forEach((file) => {
+		file.originalname = Date.now() + "__" + file.originalname;
+		sharp(file.buffer)
+			.resize(1080, 680)
+			.toFormat("jpeg")
+			.jpeg({ quality: 80 });
+	});
+	next();
+};
 
 const multerFilter = (req, file, cb) => {
 	if (file.mimetype.startsWith("image")) {
@@ -64,4 +79,4 @@ const upload = multer({
 	}
 });
 
-module.exports = { errorHandler, schemaValidator, upload };
+module.exports = { errorHandler, schemaValidator, upload, editImg };

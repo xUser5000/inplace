@@ -43,22 +43,25 @@ const schemaValidator = (schema) => {
 
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
-		cb(null, "/home/ashraf22/inplace/backend/core/images");
+		cb(null, "/home/ashraf22/inplace/backend/images");
 	},
 	filename: (req, file, cb) => {
 		cb(null, Date.now() + "__" + file.originalname);
 	}
 });
 
-multerFilter = (req, file, cb) => {
+const multerFilter = (req, file, cb) => {
 	if (file.mimetype.startsWith("image")) {
 		cb(null, true);
-	} else throw new ValidationError("only imgs allowed");
+	} else throw new ValidationError("Only PNG and JPEG files are allowed");
 };
 
 const upload = multer({
 	storage: storage,
-	fileFilter: multerFilter
+	fileFilter: multerFilter,
+	limits: {
+		fileSize: 1024 * 1024 * 5
+	}
 });
 
 module.exports = { errorHandler, schemaValidator, upload };

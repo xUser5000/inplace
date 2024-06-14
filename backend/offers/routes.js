@@ -4,6 +4,7 @@ const { defineRoute } = require("../core/define_route");
 const { NotFoundError } = require("../core/errors");
 const { Offer } = require("./models");
 const { upload } = require("./../core/middlewares");
+const cloudinary = require("./../core/cloudinary");
 
 const FEATURE = "offers";
 
@@ -65,4 +66,20 @@ defineRoute({
 	}
 });
 
+defineRoute({
+	router: offersRouter,
+	feature: FEATURE,
+	path: "/offer/:id",
+	method: "patch",
+	description: "upload offer images",
+	middlewares: [upload.array("images")],
+	handler: async (req, res) => {
+		const offer = await Offer.findByPk(req.params.id);
+		const images = req.files;
+		offer.images = [];
+		offer.images = images.map((img) => img.path);
+		await offer.save();
+		res.json(offer);
+	}
+});
 module.exports = { offersRouter };

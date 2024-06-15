@@ -3,8 +3,9 @@ const joi = require("joi");
 const { defineRoute } = require("../core/define_route");
 const { NotFoundError } = require("../core/errors");
 const { Offer } = require("./models");
-const { upload, editImg } = require("./../core/middlewares");
+const { upload } = require("./../core/middlewares");
 const cloudinary = require("./../core/cloudinary");
+const sharp = require("sharp");
 
 const FEATURE = "offers";
 
@@ -66,35 +67,45 @@ defineRoute({
 	}
 });
 
+const uploadImageToCloudinary = (buffer) => {
+	return new Promise((resolve, reject) => {
+		cloudinary.uploader
+			.upload_stream({ resource_type: "image" }, (error, result) => {
+				if (error) return reject(error);
+				resolve(result);
+			})
+			.end(buffer);
+	});
+};
+
 defineRoute({
 	router: offersRouter,
 	feature: FEATURE,
 	path: "/offer/:id",
 	method: "patch",
 	description: "upload offer images",
-	middlewares: [upload.array("images"), editImg],
+	middlewares: [upload.array("images")],
 	handler: async (req, res) => {
 		const offer = await Offer.findByPk(req.params.id);
 		// Access the uploaded files through req.files
 		const images = req.files;
 		let imgsUrls = [];
 
-		images.forEach((file) => {
-			// Upload image buffer to Cloudinary
-			const imagebuffer = file.buffer;
-			cloudinary.uploader
-				.upload_stream({ resource_type: "image" }, (error, result) => {
-					if (error) {
-						return new NotFoundError("not found!");
-					}
-					// Image uploaded successfully to Cloudinary
-					imgsUrls.push(result.url);
-					console.log("Uploaded to Cloudinary:", result.url);
-				})
-				.end(imagebuffer);
-		});
+		for (const image of images) {
+			image.originalname = Date.now() + "__" + image.originalname;
+			await sharp(image.buffer)
+				.resize(1080, 680)
+				.toFormat("jpeg")
+				.jpeg({ quality: 80 })
+				.toBuffer()
+				.then(async (outputBuffer) => {
+					const result = await uploadImageToCloudinary(outputBuffer);
+					imgsUrls.push(result.secure_url);
+				});
+		}
 		offer.images = [];
 		offer.images = imgsUrls.map((url) => url);
+		await offer.save();
 		res.json(offer);
 	}
 });

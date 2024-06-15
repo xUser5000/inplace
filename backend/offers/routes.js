@@ -88,12 +88,13 @@ defineRoute({
 						return new NotFoundError("not found!");
 					}
 					// Image uploaded successfully to Cloudinary
-
+					imgsUrls.push(result.url);
 					console.log("Uploaded to Cloudinary:", result.url);
 				})
 				.end(imagebuffer);
 		});
-
+		offer.images = [];
+		offer.images = imgsUrls.map((url) => url);
 		res.json(offer);
 	}
 });

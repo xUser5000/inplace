@@ -1,4 +1,6 @@
 const joi = require("joi");
+const multer = require("multer");
+const sharp = require("sharp");
 const { APIError, ValidationError } = require("./errors");
 
 const errorHandler = () => {
@@ -40,4 +42,16 @@ const schemaValidator = (schema) => {
 	};
 };
 
-module.exports = { errorHandler, schemaValidator };
+const upload = multer({
+	storage: multer.memoryStorage(),
+	fileFilter: (req, file, cb) => {
+		if (file.mimetype.startsWith("image")) {
+			cb(null, true);
+		} else throw new ValidationError("Only PNG and JPEG files are allowed");
+	},
+	limits: {
+		fileSize: 1024 * 1024 * 5
+	}
+});
+
+module.exports = { errorHandler, schemaValidator, upload };

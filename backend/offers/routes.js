@@ -1,8 +1,11 @@
 const offersRouter = require("express").Router();
 const joi = require("joi");
+
 const { defineRoute } = require("../core/define_route");
 const { NotFoundError } = require("../core/errors");
 const { Offer } = require("./models");
+const { upload } = require("./../core/middlewares");
+const { preprocessBuffer, uploadBuffer } = require("../core/images");
 
 const FEATURE = "offers";
 
@@ -30,11 +33,9 @@ defineRoute({
 		res.json(offer);
 	}
 });
-
 const addOfferSchema = joi.object({
 	longitude: joi.number().min(-180).max(180).required(),
 	latitude: joi.number().min(-90).max(90).required(),
-	images: joi.array().items(joi.string().uri()).min(1).required(),
 	isFurnished: joi.boolean().required(),
 	forRent: joi.boolean().required(),
 	forSale: joi.boolean().required(),
@@ -57,8 +58,22 @@ defineRoute({
 	method: "post",
 	description: "create a new offer",
 	inputSchema: addOfferSchema,
+	middlewares: [upload.array("images")],
 	handler: async (req, res) => {
-		const offer = await Offer.create(req.body);
+		const imageUploadTasks = req.files.map(async (file) => {
+			file.originalname = Date.now() + "__" + file.originalname;
+			const preProcessedBuffer = await preprocessBuffer(file.buffer);
+			const result = await uploadBuffer(preProcessedBuffer);
+			return result.secure_url;
+		});
+
+		const imageUrls = await Promise.all(imageUploadTasks);
+
+		const offer = await Offer.create({
+			...req.body,
+			images: imageUrls
+		});
+
 		res.json(offer);
 	}
 });

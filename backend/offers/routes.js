@@ -1,11 +1,11 @@
 const offersRouter = require("express").Router();
 const joi = require("joi");
+
 const { defineRoute } = require("../core/define_route");
 const { NotFoundError } = require("../core/errors");
 const { Offer } = require("./models");
 const { upload } = require("./../core/middlewares");
-const cloudinary = require("./../core/cloudinary");
-const sharp = require("sharp");
+const { preprocessBuffer, uploadBuffer } = require("../core/images");
 
 const FEATURE = "offers";
 
@@ -33,11 +33,9 @@ defineRoute({
 		res.json(offer);
 	}
 });
-
 const addOfferSchema = joi.object({
 	longitude: joi.number().min(-180).max(180).required(),
 	latitude: joi.number().min(-90).max(90).required(),
-	images: joi.array().items(joi.string().uri()).min(1).required(),
 	isFurnished: joi.boolean().required(),
 	forRent: joi.boolean().required(),
 	forSale: joi.boolean().required(),
@@ -62,51 +60,21 @@ defineRoute({
 	inputSchema: addOfferSchema,
 	middlewares: [upload.array("images")],
 	handler: async (req, res) => {
-		const offer = await Offer.create(req.body);
-		res.json(offer);
-	}
-});
-
-const uploadImageToCloudinary = (buffer) => {
-	return new Promise((resolve, reject) => {
-		cloudinary.uploader
-			.upload_stream({ resource_type: "image" }, (error, result) => {
-				if (error) return reject(error);
-				resolve(result);
-			})
-			.end(buffer);
-	});
-};
-
-defineRoute({
-	router: offersRouter,
-	feature: FEATURE,
-	path: "/offer/:id",
-	method: "patch",
-	description: "upload offer images",
-	middlewares: [upload.array("images")],
-	handler: async (req, res) => {
-		const offer = await Offer.findByPk(req.params.id);
-		// Access the uploaded files through req.files
-		const images = req.files;
-		let imgsUrls = [];
-
-		for (const image of images) {
-			image.originalname = Date.now() + "__" + image.originalname;
-			await sharp(image.buffer)
-				.resize(1080, 680)
-				.toFormat("jpeg")
-				.jpeg({ quality: 80 })
-				.toBuffer()
-				.then(async (outputBuffer) => {
-					const result = await uploadImageToCloudinary(outputBuffer);
-					imgsUrls.push(result.secure_url);
-				});
+		const imageUrls = [];
+		for (const file of req.files) {
+			file.originalname = Date.now() + "__" + file.originalname;
+			const preProcessedBuffer = await preprocessBuffer(file.buffer);
+			const result = await uploadBuffer(preProcessedBuffer);
+			imageUrls.push(result.secure_url);
 		}
-		offer.images = [];
-		offer.images = imgsUrls.map((url) => url);
-		await offer.save();
+
+		const offer = await Offer.create({
+			...req.body,
+			images: imageUrls
+		});
+
 		res.json(offer);
 	}
 });
+
 module.exports = { offersRouter };

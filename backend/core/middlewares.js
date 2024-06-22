@@ -42,17 +42,13 @@ const schemaValidator = (schema) => {
 	};
 };
 
-const storage = multer.memoryStorage();
-
-const multerFilter = (req, file, cb) => {
-	if (file.mimetype.startsWith("image")) {
-		cb(null, true);
-	} else throw new ValidationError("Only PNG and JPEG files are allowed");
-};
-
 const upload = multer({
-	storage: storage,
-	fileFilter: multerFilter,
+	storage: multer.memoryStorage(),
+	fileFilter: (req, file, cb) => {
+		if (file.mimetype.startsWith("image")) {
+			cb(null, true);
+		} else throw new ValidationError("Only PNG and JPEG files are allowed");
+	},
 	limits: {
 		fileSize: 1024 * 1024 * 5
 	}

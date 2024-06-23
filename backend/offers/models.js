@@ -21,11 +21,7 @@ const Offer = sequelize.define("offers", {
 	},
 	images: {
 		type: ARRAY(STRING),
-		allowNull: false,
-		validate: {
-			min: 1,
-			isUrl: true
-		}
+		allowNull: false
 	},
 	isFurnished: {
 		type: BOOLEAN,

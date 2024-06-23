@@ -60,14 +60,17 @@ defineRoute({
 	inputSchema: addOfferSchema,
 	middlewares: [upload.array("images")],
 	handler: async (req, res) => {
-		const imageUploadTasks = req.files.map(async (file) => {
-			file.originalname = Date.now() + "__" + file.originalname;
-			const preProcessedBuffer = await preprocessBuffer(file.buffer);
-			const result = await uploadBuffer(preProcessedBuffer);
-			return result.secure_url;
-		});
+		let imageUrls = [];
+		if (req.files && req.files.length > 0) {
+			const imageUploadTasks = req.files.map(async (file) => {
+				file.originalname = Date.now() + "__" + file.originalname;
+				const preProcessedBuffer = await preprocessBuffer(file.buffer);
+				const result = await uploadBuffer(preProcessedBuffer);
+				return result.secure_url;
+			});
 
-		const imageUrls = await Promise.all(imageUploadTasks);
+			imageUrls = await Promise.all(imageUploadTasks);
+		}
 
 		const offer = await Offer.create({
 			...req.body,

@@ -6,14 +6,6 @@ const { STRING, BOOLEAN, INTEGER, DOUBLE, ARRAY, ENUM } = require("sequelize");
 const OFFER_TYPE_ENUM = ["for_rent", "for_sale"];
 
 const Offer = sequelize.define("offers", {
-	userId: {
-		type: INTEGER,
-		references: {
-			model: User,
-			key: "id"
-		},
-		allowNull: false
-	},
 	description: {
 		type: STRING,
 		allowNull: false,
@@ -79,9 +71,6 @@ const Offer = sequelize.define("offers", {
 	}
 });
 
-Offer.hasOne(User, {
-	foreignKey: "userId",
-	as: "user"
-});
+User.hasMany(Offer, { foreignKey: "userId", as: "user" });
 
 module.exports = { Offer, OFFER_TYPE_ENUM };

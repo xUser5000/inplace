@@ -2,7 +2,7 @@ const offersRouter = require("express").Router();
 const joi = require("joi");
 
 const { defineRoute } = require("../core/define_route");
-const { NotFoundError } = require("../core/errors");
+const { NotFoundError, InternalServerError } = require("../core/errors");
 const { Offer, OFFER_TYPE_ENUM } = require("./models");
 const { upload } = require("./../core/middlewares");
 const { preprocessBuffer, uploadBuffer } = require("../core/images");
@@ -93,6 +93,26 @@ defineRoute({
 		});
 
 		res.json(offer);
+	}
+});
+
+defineRoute({
+	router: offersRouter,
+	feature: FEATURE,
+	path: "/remove/:id",
+	method: "delete",
+	description: "delete an offer",
+	handler: async (req, res) => {
+		const offer = await Offer.findByPk(req.params.id);
+		if (!offer) throw new NotFoundError("Offer not found!");
+		try {
+			offer.destroy();
+			res.json(offer);
+		} catch (error) {
+			throw new InternalServerError(
+				"Something went wrong while deleting the offer, please try again later."
+			);
+		}
 	}
 });
 

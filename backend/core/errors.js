@@ -59,4 +59,20 @@ class ForbiddenError extends APIError {
 	}
 }
 
-module.exports = { APIError, NotFoundError, ValidationError, ForbiddenError };
+class InternalServerError extends APIError {
+	constructor(message) {
+		super({
+			code: 500,
+			name: "InternalServerError",
+			message
+		});
+	}
+}
+
+module.exports = {
+	APIError,
+	NotFoundError,
+	ValidationError,
+	ForbiddenError,
+	InternalServerError
+};

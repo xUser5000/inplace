@@ -16,6 +16,12 @@ const User = sequelize.define("user", {
 			max: 50
 		}
 	},
+	avatar: {
+		type: DataTypes.STRING,
+		validate: {
+			isUrl: true
+		}
+	},
 	email: {
 		type: DataTypes.STRING,
 		allowNull: false,

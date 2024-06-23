@@ -2,6 +2,8 @@ const joi = require("joi");
 
 const { defineRoute } = require("../core/define_route");
 const { NotFoundError } = require("../core/errors");
+const { upload } = require("../core/middlewares");
+const { preprocessBuffer, uploadBuffer } = require("../core/images");
 
 const { User } = require("./models");
 
@@ -33,25 +35,26 @@ defineRoute({
 	feature: FEATURE,
 	path: "/update",
 	method: "patch",
-	description: "Update the user first_name or last_name or both",
+	description: "Update the user first name, last name, or bio",
 	inputSchema: updateProfileSchema,
+	middlewares: [upload.single("avatar")],
 	handler: async (req, res) => {
 		const user = await User.findByPk(req.userId);
 
-		if (req.body.first_name) {
-			user.first_name = req.body.first_name;
-		}
+		const { first_name, last_name, bio } = req.body;
+		const file = req.file;
 
-		if (req.body.last_name) {
-			user.last_name = req.body.last_name;
-		}
-
-		if (req.body.bio) {
-			user.bio = req.body.bio;
+		if (first_name) user.first_name = first_name;
+		if (last_name) user.last_name = last_name;
+		if (bio) user.bio = bio;
+		if (file) {
+			file.originalname = Date.now() + "__" + file.originalname;
+			const preProcessedBuffer = await preprocessBuffer(file.buffer);
+			const result = await uploadBuffer(preProcessedBuffer);
+			user.avatar = result.secure_url;
 		}
 
 		user.save();
-
 		res.json(user);
 	}
 });

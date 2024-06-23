@@ -12,11 +12,24 @@ const FEATURE = "offers";
 defineRoute({
 	router: offersRouter,
 	feature: FEATURE,
-	path: "/offers",
+	path: "/all",
 	method: "get",
 	description: "list all offers",
 	handler: async (req, res) => {
 		const offers = await Offer.findAll();
+		res.json(offers);
+	}
+});
+
+defineRoute({
+	router: offersRouter,
+	feature: FEATURE,
+	path: "/user/:userId",
+	method: "get",
+	description: "list all offers posted by a user",
+	handler: async (req, res) => {
+		const userId = req.params.userId;
+		const offers = await Offer.findAll({ where: { userId } });
 		res.json(offers);
 	}
 });
@@ -33,6 +46,7 @@ defineRoute({
 		res.json(offer);
 	}
 });
+
 const addOfferSchema = joi.object({
 	description: joi.string().max(50).required(),
 	longitude: joi.number().min(-180).max(180).required(),
@@ -54,7 +68,7 @@ const addOfferSchema = joi.object({
 defineRoute({
 	router: offersRouter,
 	feature: FEATURE,
-	path: "/offer",
+	path: "/create",
 	method: "post",
 	description: "create a new offer",
 	inputSchema: addOfferSchema,

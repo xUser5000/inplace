@@ -3,7 +3,7 @@ const joi = require("joi");
 
 const { defineRoute } = require("../core/define_route");
 const { NotFoundError } = require("../core/errors");
-const { Offer } = require("./models");
+const { Offer, OFFER_TYPE_ENUM } = require("./models");
 const { upload } = require("./../core/middlewares");
 const { preprocessBuffer, uploadBuffer } = require("../core/images");
 
@@ -34,22 +34,22 @@ defineRoute({
 	}
 });
 const addOfferSchema = joi.object({
+	description: joi.string().max(50).required(),
 	longitude: joi.number().min(-180).max(180).required(),
 	latitude: joi.number().min(-90).max(90).required(),
-	isFurnished: joi.boolean().required(),
-	forRent: joi.boolean().required(),
-	forSale: joi.boolean().required(),
-	rentCost: joi.number().required(),
-	saleCost: joi.number().required(),
-	capacity: joi.number().integer().required(),
-	floorNumber: joi.number().integer().required(),
-	roomCount: joi.number().integer().required(),
-	bathroomCount: joi.number().integer().required(),
-	bedCount: joi.number().integer().required(),
 	area: joi.number().required(),
-	appliances: joi.array().items(joi.string()),
-	notes: joi.string(),
-	description: joi.string().max(50).required()
+	offerType: joi
+		.string()
+		.valid(...OFFER_TYPE_ENUM)
+		.required(),
+	offerPrice: joi.number().required(),
+	isFurnished: joi.boolean(),
+	floorNumber: joi.number().integer(),
+	roomCount: joi.number().integer(),
+	bathroomCount: joi.number().integer(),
+	bedCount: joi.number().integer(),
+	appliances: joi.array().items(joi.string()).default([]),
+	notes: joi.string()
 });
 defineRoute({
 	router: offersRouter,
@@ -73,8 +73,9 @@ defineRoute({
 		}
 
 		const offer = await Offer.create({
-			...req.body,
-			images: imageUrls
+			userId: req.userId,
+			images: imageUrls,
+			...req.body
 		});
 
 		res.json(offer);

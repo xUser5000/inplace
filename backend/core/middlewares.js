@@ -23,7 +23,6 @@ const schemaValidator = (schema) => {
 		const result = schema.validate(req.body, { abortEarly: false });
 		if (result.error) {
 			const errors = result.error.details.reduce((acc, error) => {
-				console.log(error);
 				const field = error.context.label;
 				const message = error.message;
 

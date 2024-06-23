@@ -1,8 +1,26 @@
 const sequelize = require("../core/db");
+const { User } = require("../users/models");
 
-const { STRING, BOOLEAN, INTEGER, DOUBLE, ARRAY } = require("sequelize");
+const { STRING, BOOLEAN, INTEGER, DOUBLE, ARRAY, ENUM } = require("sequelize");
+
+const OFFER_TYPE_ENUM = ["for_rent", "for_sale"];
 
 const Offer = sequelize.define("offers", {
+	userId: {
+		type: INTEGER,
+		references: {
+			model: User,
+			key: "id"
+		},
+		allowNull: false
+	},
+	description: {
+		type: STRING,
+		allowNull: false,
+		validate: {
+			max: 50
+		}
+	},
 	longitude: {
 		type: DOUBLE,
 		allowNull: false,
@@ -19,31 +37,25 @@ const Offer = sequelize.define("offers", {
 			max: 90
 		}
 	},
+	area: {
+		type: DOUBLE,
+		allowNull: false
+	},
+	offerType: {
+		type: ENUM(...OFFER_TYPE_ENUM),
+		allowNull: false
+	},
+	offerPrice: {
+		type: DOUBLE,
+		allowNull: false
+	},
 	images: {
 		type: ARRAY(STRING),
-		allowNull: false
+		allowNull: false,
+		defaultValue: []
 	},
 	isFurnished: {
-		type: BOOLEAN,
-		allowNull: false
-	},
-	forRent: {
-		type: BOOLEAN,
-		allowNull: false
-	},
-	forSale: {
-		type: BOOLEAN,
-		allowNull: false
-	},
-	rentCost: {
-		type: DOUBLE,
-		allowNull: false,
-		defaultValue: 0
-	},
-	saleCost: {
-		type: DOUBLE,
-		allowNull: false,
-		defaultValue: 0
+		type: BOOLEAN
 	},
 	floorNumber: {
 		type: INTEGER
@@ -57,25 +69,19 @@ const Offer = sequelize.define("offers", {
 	bathroomCount: {
 		type: INTEGER
 	},
-	area: {
-		type: DOUBLE
-	},
 	appliances: {
-		type: ARRAY(STRING)
+		type: ARRAY(STRING),
+		allowNull: false,
+		defaultValue: []
 	},
 	notes: {
 		type: STRING
-	},
-	description: {
-		type: STRING,
-		allowNull: false,
-		validate: {
-			max: 50
-		}
-	},
-	capacity: {
-		type: INTEGER,
-		allowNull: false
 	}
 });
-module.exports = { Offer };
+
+Offer.hasOne(User, {
+	foreignKey: "userId",
+	as: "user"
+});
+
+module.exports = { Offer, OFFER_TYPE_ENUM };

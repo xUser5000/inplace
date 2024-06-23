@@ -12,7 +12,7 @@ const FEATURE = "users";
 defineRoute({
 	router: userRouter,
 	feature: FEATURE,
-	path: "/details/:id",
+	path: "/:id",
 	method: "get",
 	description: "Get user details",
 	handler: async (req, res) => {
@@ -35,7 +35,7 @@ const updateProfileSchema = joi.object({
 defineRoute({
 	router: userRouter,
 	feature: FEATURE,
-	path: "/updateProfile",
+	path: "/update",
 	method: "patch",
 	description: "Update the user first_name or last_name or both",
 	inputSchema: updateProfileSchema,

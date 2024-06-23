@@ -12,25 +12,21 @@ const FEATURE = "users";
 defineRoute({
 	router: userRouter,
 	feature: FEATURE,
-	path: "/:id",
+	path: "/user/:id",
 	method: "get",
 	description: "Get user details",
 	handler: async (req, res) => {
 		const userId = req.params.id;
-
 		const user = await User.findByPk(userId);
-
-		if (!user) {
-			throw new NotFoundError("User Not Found");
-		}
-
+		if (!user) throw new NotFoundError("User Not Found");
 		res.json(user);
 	}
 });
 
 const updateProfileSchema = joi.object({
 	first_name: joi.string(),
-	last_name: joi.string()
+	last_name: joi.string(),
+	bio: joi.string().strip().min(1).max(50)
 });
 defineRoute({
 	router: userRouter,
@@ -48,6 +44,10 @@ defineRoute({
 
 		if (req.body.last_name) {
 			user.last_name = req.body.last_name;
+		}
+
+		if (req.body.bio) {
+			user.bio = req.body.bio;
 		}
 
 		user.save();

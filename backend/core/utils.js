@@ -1,5 +1,9 @@
 const { Op } = require("sequelize");
-const { ValidationError } = require("./errors");
+const {
+	ValidationError,
+	MissingResultOptionsError,
+	AttributesNotFoundError
+} = require("./errors");
 const sequelize = require("./db");
 
 const Operations = {
@@ -9,15 +13,15 @@ const Operations = {
 
 const testResultOption = (result_options) => {
 	if (!result_options) {
-		throw new Error("result_options is required");
+		throw new MissingResultOptionsError("result_options is required");
 	}
 	const rawAttributes =
 		sequelize.models[result_options.model].getAttributes();
 	for (let operation in result_options.attributes) {
 		for (let attribute of result_options.attributes[operation]) {
 			if (!(attribute in rawAttributes)) {
-				throw new Error(
-					`attribute "${attribute}" do not refer to any column in your model`
+				throw new AttributesNotFoundError(
+					`${attribute} attribute not found in ${result_options.model} model`
 				);
 			}
 		}

@@ -60,8 +60,8 @@ example of result_options object
 		attributes: {
 			search: ["name"],
 			sort: ["price"],
-			singleFilter: ["price", "size"],
-			multiFilter: ["category"]
+			singleValue: ["price", "size"],
+			multiValue: ["category"]
 		}
 	};
 */

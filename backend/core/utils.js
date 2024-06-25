@@ -26,6 +26,12 @@ const testResultOption = (result_options) => {
 			}
 		}
 	}
+	result_options.attributes.sort = result_options.attributes.sort || [];
+	result_options.attributes.singleValue =
+		result_options.attributes.singleValue || [];
+	result_options.attributes.multiValue =
+		result_options.attributes.multiValue || [];
+	result_options.attributes.search = result_options.attributes.search || [];
 };
 
 const addPagingToQueryOptions = (req, queryOptions) => {
@@ -113,8 +119,8 @@ const validateValueAndReforamtIt = (
 	operation
 ) => {
 	const [attribute, operator, ...operands] = value.split("__");
-	validateAttributes(value, attribute, operator, attributeList);
 	validateOperators(value, operator, opertorsList);
+	validateAttributes(value, attribute, operator, attributeList);
 	validateOperands(value, operands, operator, operation);
 	return { attribute, operator, operands };
 };
@@ -147,6 +153,9 @@ const validateAttributes = (value, attribute, operator, attributeList) => {
 };
 
 const validateOperators = (value, operator, opertorsList) => {
+	if (!operator) {
+		throw new ValidationError(`${value}: operator is required`);
+	}
 	if (!opertorsList.includes(operator.toLowerCase())) {
 		throw new ValidationError(
 			`${value}: ${operator} operator is not valid`

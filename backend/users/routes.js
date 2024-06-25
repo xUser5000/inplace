@@ -6,6 +6,7 @@ const { upload } = require("../core/middlewares");
 const { preprocessBuffer, uploadBuffer } = require("../core/images");
 
 const { User } = require("./models");
+const { Offer } = require("../offers/models");
 
 const userRouter = require("express").Router();
 
@@ -22,6 +23,21 @@ defineRoute({
 		const user = await User.findByPk(userId);
 		if (!user) throw new NotFoundError("User Not Found");
 		res.json(user);
+	}
+});
+
+defineRoute({
+	router: userRouter,
+	feature: FEATURE,
+	path: "/user/:id/offers",
+	method: "get",
+	description: "list all offers posted by a user",
+	handler: async (req, res) => {
+		const userId = req.params.id;
+		const user = await User.findByPk(userId);
+		if (!user) throw new NotFoundError("User not found!");
+		const offers = await Offer.findAll({ where: { userId } });
+		res.json(offers);
 	}
 });
 

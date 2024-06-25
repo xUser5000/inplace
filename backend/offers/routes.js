@@ -24,19 +24,6 @@ defineRoute({
 defineRoute({
 	router: offersRouter,
 	feature: FEATURE,
-	path: "/user/:userId",
-	method: "get",
-	description: "list all offers posted by a user",
-	handler: async (req, res) => {
-		const userId = req.params.userId;
-		const offers = await Offer.findAll({ where: { userId } });
-		res.json(offers);
-	}
-});
-
-defineRoute({
-	router: offersRouter,
-	feature: FEATURE,
 	path: "/offer/:id",
 	method: "get",
 	description: "get an offer by id",

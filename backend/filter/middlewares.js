@@ -1,13 +1,12 @@
 const {
-	testResultOptionInModel,
+	testResultOption,
 	addPagingToQueryOptions,
 	addSortingToQueryOptions,
 	addFilteringToQueryOptions
 } = require("./utils");
 
-const buildQueryOptionsBasedOnQueryParams = (model) => {
-	const { result_options } = model;
-	testResultOptionInModel(model);
+const buildQueryOptionsBasedOnQueryParams = (result_options) => {
+	testResultOption(result_options);
 
 	return (req, res, next) => {
 		const { enablePaging, enableSorting, enableFiltering, attributes } =

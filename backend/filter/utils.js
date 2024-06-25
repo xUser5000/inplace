@@ -1,35 +1,35 @@
 const { Op } = require("sequelize");
 const { ValidationError } = require("../core/errors");
+const sequelize = require("../core/db");
 
 /*
-example of result_options object 
-	result_options: {
-		type: DataTypes.VIRTUAL,
-		defaultValue: {
-			enablePaging: true,
-			enableFiltering: true,
-			enableSorting: true,
-			attributes: {
-				search: ["name"],
-				sort: ["price"],
-				singleFilter: ["price","size"],
-				multiFilter: ["category"],
-			}
-		}
+example of result_options object
+	{
+	model: "user",
+	enablePaging: true,
+	enableFiltering: true,
+	enableSorting: true,
+	attributes: {
+		search: ["name"],
+		sort: ["price"],
+		singleFilter: ["price", "size"],
+		multiFilter: ["category"]
 	}
+};
 */
 const Operations = {
 	SORT: "sort",
 	FILTER: "filter"
 };
 
-const testResultOptionInModel = (model) => {
-	if (!model.result_options) {
-		throw new Error(`model need to have result_options object`);
+const testResultOption = (result_options) => {
+	if (!result_options) {
+		throw new Error("result_options is required");
 	}
-	const { result_options, rawAttributes } = model;
-	for (operation in result_options.attributes) {
-		for (attribute of result_options.attributes[operation]) {
+	const rawAttributes =
+		sequelize.models[result_options.model].getAttributes();
+	for (let operation in result_options.attributes) {
+		for (let attribute of result_options.attributes[operation]) {
 			if (!(attribute in rawAttributes)) {
 				throw new Error(
 					`attribute "${attribute}" do not refer to any column in your model`
@@ -187,7 +187,7 @@ const validateOperands = (value, operands, operator, operation) => {
 };
 
 module.exports = {
-	testResultOptionInModel,
+	testResultOption,
 	addPagingToQueryOptions,
 	addSortingToQueryOptions,
 	addFilteringToQueryOptions

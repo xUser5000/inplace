@@ -1,22 +1,7 @@
 const { Op } = require("sequelize");
-const { ValidationError } = require("../core/errors");
-const sequelize = require("../core/db");
+const { ValidationError } = require("./errors");
+const sequelize = require("./db");
 
-/*
-example of result_options object
-	{
-	model: "user",
-	enablePaging: true,
-	enableFiltering: true,
-	enableSorting: true,
-	attributes: {
-		search: ["name"],
-		sort: ["price"],
-		singleFilter: ["price", "size"],
-		multiFilter: ["category"]
-	}
-};
-*/
 const Operations = {
 	SORT: "sort",
 	FILTER: "filter"

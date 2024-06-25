@@ -72,5 +72,6 @@ const Offer = sequelize.define("offers", {
 });
 
 User.hasMany(Offer, { foreignKey: "userId", as: "user" });
+Offer.belongsTo(User);
 
 module.exports = { Offer, OFFER_TYPE_ENUM };

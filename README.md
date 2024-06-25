@@ -12,7 +12,7 @@ A website that helps you find the right apartment
 This will automatically format the staged files when creating a new commit.
 ```bash
 cd backend
-npm setup-pre-commit-hooks
+npm run setup-pre-commit-hooks
 ```
 
 ## Environment variables
@@ -34,8 +34,15 @@ npm run format          # to format the backend source files
 
 # Ports
 ```
-Backend (Node.js)       -> 3000
-Database (PostgreSQL)   -> 5432
-Mailhog SMTP            -> 1025
-Mailhog Web UI          -> 8025 
+Backend (Node.js)               -> 3000
+Database (PostgreSQL)           -> 5432
+Mailhog SMTP                    -> 1025
+Mailhog Web UI                  -> 8025
+MKDocs internal documentation   -> 8000
+```
+
+# Important endpoints
+```
+Health check                    -> /
+Swagger UI                      -> /api-docs
 ```

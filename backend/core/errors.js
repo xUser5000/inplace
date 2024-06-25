@@ -59,6 +59,7 @@ class ForbiddenError extends APIError {
 	}
 }
 
+
 class MissingResultOptionsError extends APIError {
 	constructor(message) {
 		super({
@@ -79,11 +80,22 @@ class AttributesNotFoundError extends APIError {
 	}
 }
 
+class InternalServerError extends APIError {
+	constructor(message) {
+		super({
+			code: 500,
+			name: "InternalServerError",
+			message
+		});
+	}
+}
+
 module.exports = {
 	APIError,
 	NotFoundError,
 	ValidationError,
 	ForbiddenError,
+	InternalServerError,
 	MissingResultOptionsError,
 	AttributesNotFoundError
 };

@@ -1,4 +1,6 @@
 const joi = require("joi");
+const multer = require("multer");
+const sharp = require("sharp");
 const { APIError, ValidationError } = require("./errors");
 const {
 	testResultOption,
@@ -24,13 +26,9 @@ const errorHandler = () => {
 
 const schemaValidator = (schema) => {
 	return (req, res, next) => {
-		const result = schema.validate(req.body, {
-			presence: "required",
-			abortEarly: false
-		});
+		const result = schema.validate(req.body, { abortEarly: false });
 		if (result.error) {
 			const errors = result.error.details.reduce((acc, error) => {
-				console.log(error);
 				const field = error.context.label;
 				const message = error.message;
 
@@ -48,6 +46,7 @@ const schemaValidator = (schema) => {
 		next();
 	};
 };
+
 
 const buildQueryOptionsBasedOnQueryParams = (result_options) => {
 	/*
@@ -89,8 +88,17 @@ example of result_options object
 	};
 };
 
-module.exports = {
-	errorHandler,
-	schemaValidator,
-	buildQueryOptionsBasedOnQueryParams
-};
+
+const upload = multer({
+	storage: multer.memoryStorage(),
+	fileFilter: (req, file, cb) => {
+		if (file.mimetype.startsWith("image")) {
+			cb(null, true);
+		} else throw new ValidationError("Only PNG and JPEG files are allowed");
+	},
+	limits: {
+		fileSize: 1024 * 1024 * 5
+	}
+});
+
+module.exports = { errorHandler, schemaValidator,buildQueryOptionsBasedOnQueryParams, upload };

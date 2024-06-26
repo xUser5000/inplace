@@ -1,35 +1,18 @@
-const express = require("express");
-const router = express.Router();
 const { Server } = require("socket.io");
 const { Message } = require("./models");
 
-// Set up the Socket.IO server
-let io;
-
-const initializeChat = (server) => {
-	io = new Server(server);
-
-	io.on("connection", (socket) => {
-		console.log("a user connected");
-
-		// Handle incoming messages
-		socket.on("chat message", async (msg) => {
-			const { content, sender } = msg;
-			// Save the message to the database
-			await Message.create({ content, sender });
-
-			// Emit the message to all clients
-			io.emit("chat message", msg);
+const io = new Server();
+io.on("connection", (socket) => {
+	console.log(`user with id ${socket.id} connected`);
+	// room is the defualt reciver room that is his id
+	socket.on("sendMessage", async (data, room) => {
+		await Message.create({
+			sender_id: socket.id,
+			reciver_id: room,
+			content: data
 		});
-
-		socket.on("disconnect", () => {
-			console.log("user disconnected");
-		});
+		socket.to(room).emit("reciveMessage", data);
 	});
-};
-
-router.get("/", (req, res) => {
-	res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
-module.exports = { router, initializeChat };
+module.exports = { io };

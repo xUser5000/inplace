@@ -16,6 +16,7 @@ const { authRouter } = require("./authentication/router");
 const { offersRouter } = require("./offers/routes");
 const { userRouter } = require("./users/routes");
 const { jwtFilter } = require("./authentication/middlewares");
+const { io } = require("./chats/server");
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use(jwtFilter());
 app.get("/private", (req, res) => res.send("Welcome to inPlace"));
 app.use("/offers", offersRouter);
 app.use("/users", userRouter);
+app.use(io);
 
 app.use(errorHandler()); // Error handling middleware
 

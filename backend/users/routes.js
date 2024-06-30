@@ -45,7 +45,7 @@ const updateProfileSchema = joi.object({
 	first_name: joi.string(),
 	last_name: joi.string(),
 	bio: joi.string().strip().min(1).max(50),
-	phone_number: joi.string().phone_number()
+	phone_number: joi.string()
 });
 defineRoute({
 	router: userRouter,

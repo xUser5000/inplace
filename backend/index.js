@@ -1,7 +1,6 @@
 // Libraries
 const express = require("express");
 const morgan = require("morgan");
-const swaggerUi = require("swagger-ui-express");
 const cors = require("cors");
 const { APIDocs } = require("./core/swagger");
 require("express-async-errors");
@@ -29,7 +28,11 @@ app.use(morgan("dev"));
 app.get("/", (req, res) => res.send("ok"));
 app.use("/auth", authRouter);
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(APIDocs.get()));
+// api docs
+if (process.env.NODE_ENV !== "production") {
+	const swaggerUi = require("swagger-ui-express");
+	app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(APIDocs.get()));
+}
 
 // private routes
 app.use(jwtFilter());

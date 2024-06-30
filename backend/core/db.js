@@ -1,6 +1,6 @@
 const { Sequelize } = require("sequelize");
 
-const requireSSL = process.env.NODE_ENV == "production";
+const requireSSL = process.env.NODE_ENV === "production";
 
 const sequelize = new Sequelize({
 	dialect: "postgres",
@@ -9,11 +9,13 @@ const sequelize = new Sequelize({
 	database: process.env.DB_NAME,
 	username: process.env.DB_USERNAME,
 	password: process.env.DB_PASSWORD,
-	dialectOptions: {
-		ssl: {
-			require: requireSSL
-		}
-	}
+	dialectOptions: requireSSL
+		? {
+				ssl: {
+					require: requireSSL
+				}
+		  }
+		: {}
 });
 
 module.exports = sequelize;

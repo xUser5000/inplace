@@ -2,6 +2,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
 const { APIDocs } = require("./core/swagger");
 require("express-async-errors");
 
@@ -29,10 +30,7 @@ app.get("/", (req, res) => res.send("ok"));
 app.use("/auth", authRouter);
 
 // api docs
-if (process.env.NODE_ENV !== "production") {
-	const swaggerUi = require("swagger-ui-express");
-	app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(APIDocs.get()));
-}
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(APIDocs.get()));
 
 // private routes
 app.use(jwtFilter());

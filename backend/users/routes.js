@@ -44,7 +44,8 @@ defineRoute({
 const updateProfileSchema = joi.object({
 	first_name: joi.string(),
 	last_name: joi.string(),
-	bio: joi.string().strip().min(1).max(50)
+	bio: joi.string().strip().min(1).max(50),
+	phone_number: joi.string().phone_number()
 });
 defineRoute({
 	router: userRouter,
@@ -57,12 +58,13 @@ defineRoute({
 	handler: async (req, res) => {
 		const user = await User.findByPk(req.userId);
 
-		const { first_name, last_name, bio } = req.body;
+		const { first_name, last_name, bio, phone_number } = req.body;
 		const file = req.file;
 
 		if (first_name) user.first_name = first_name;
 		if (last_name) user.last_name = last_name;
 		if (bio) user.bio = bio;
+		if (phone_number) user.phone_number = phone_number;
 		if (file) {
 			file.originalname = Date.now() + "__" + file.originalname;
 			const preProcessedBuffer = await preprocessBuffer(file.buffer);

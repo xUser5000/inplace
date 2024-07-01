@@ -34,7 +34,7 @@ export function OffersPage() {
                     <Button>Add Offer</Button>
                 </Link>
             </div>
-            <div className="grid grid-cols-3 gap-3 my-10">
+            <div className="grid grid-cols-1  md:grid-cols-3 gap-10 md:gap-3 my-10">
                 {
                     offers.map((offer: any) => {
                         return (

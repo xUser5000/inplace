@@ -1,15 +1,18 @@
 const offersRouter = require("express").Router();
 const joi = require("joi");
+
 const { defineRoute } = require("../core/define_route");
-const { NotFoundError } = require("../core/errors");
-const { Offer } = require("./models");
+const { NotFoundError, InternalServerError } = require("../core/errors");
+const { Offer, OFFER_TYPE_ENUM } = require("./models");
+const { upload } = require("./../core/middlewares");
+const { preprocessBuffer, uploadBuffer } = require("../core/images");
 
 const FEATURE = "offers";
 
 defineRoute({
 	router: offersRouter,
 	feature: FEATURE,
-	path: "/offers",
+	path: "/all",
 	method: "get",
 	description: "list all offers",
 	handler: async (req, res) => {
@@ -32,35 +35,71 @@ defineRoute({
 });
 
 const addOfferSchema = joi.object({
-	title: joi.string().required(),
+	description: joi.string().max(50).required(),
 	// longitude: joi.number().min(-180).max(180).required(),
 	// latitude: joi.number().min(-90).max(90).required(),
-	images: joi.array().items(joi.string().uri()).min(1).required(),
-	isFurnished: joi.boolean().required(),
-	forRent: joi.boolean().required(),
-	forSale: joi.boolean().required(),
-	rentCost: joi.number().required(),
-	saleCost: joi.number().required(),
-	capacity: joi.number().integer().required(),
-	floorNumber: joi.number().integer().required(),
-	roomCount: joi.number().integer().required(),
-	bathroomCount: joi.number().integer().required(),
-	bedCount: joi.number().integer().required(),
 	area: joi.number().required(),
-	appliances: joi.array().items(joi.string()),
-	notes: joi.string(),
-	description: joi.string().required()
+	offerType: joi
+		.string()
+		.valid(...OFFER_TYPE_ENUM)
+		.required(),
+	offerPrice: joi.number().required(),
+	isFurnished: joi.boolean(),
+	floorNumber: joi.number().integer(),
+	roomCount: joi.number().integer(),
+	bathroomCount: joi.number().integer(),
+	bedCount: joi.number().integer(),
+	appliances: joi.array().items(joi.string()).default([]),
+	notes: joi.string()
 });
 defineRoute({
 	router: offersRouter,
 	feature: FEATURE,
-	path: "/offer",
+	path: "/create",
 	method: "post",
 	description: "create a new offer",
 	inputSchema: addOfferSchema,
+	middlewares: [upload.array("images")],
 	handler: async (req, res) => {
-		const offer = await Offer.create(req.body);
+		let imageUrls = [];
+		if (req.files && req.files.length > 0) {
+			const imageUploadTasks = req.files.map(async (file) => {
+				file.originalname = Date.now() + "__" + file.originalname;
+				const preProcessedBuffer = await preprocessBuffer(file.buffer);
+				const result = await uploadBuffer(preProcessedBuffer);
+				return result.secure_url;
+			});
+
+			imageUrls = await Promise.all(imageUploadTasks);
+		}
+
+		const offer = await Offer.create({
+			userId: req.userId,
+			images: imageUrls,
+			...req.body
+		});
+
 		res.json(offer);
+	}
+});
+
+defineRoute({
+	router: offersRouter,
+	feature: FEATURE,
+	path: "/remove/:id",
+	method: "delete",
+	description: "delete an offer",
+	handler: async (req, res) => {
+		const offer = await Offer.findByPk(req.params.id);
+		if (!offer) throw new NotFoundError("Offer not found!");
+		try {
+			offer.destroy();
+			res.json(offer);
+		} catch (error) {
+			throw new InternalServerError(
+				"Something went wrong while deleting the offer, please try again later."
+			);
+		}
 	}
 });
 

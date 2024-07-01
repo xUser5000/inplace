@@ -40,3 +40,9 @@ Mailhog SMTP                    -> 1025
 Mailhog Web UI                  -> 8025
 MKDocs internal documentation   -> 8000
 ```
+
+# Important endpoints
+```
+Health check                    -> /
+Swagger UI                      -> /api-docs
+```

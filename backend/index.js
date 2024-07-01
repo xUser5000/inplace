@@ -1,8 +1,8 @@
 // Libraries
 const express = require("express");
 const morgan = require("morgan");
-const swaggerUi = require("swagger-ui-express");
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
 const { APIDocs } = require("./core/swagger");
 require("express-async-errors");
 
@@ -15,6 +15,7 @@ const { errorHandler } = require("./core/middlewares");
 const { authRouter } = require("./authentication/router");
 const { offersRouter } = require("./offers/routes");
 const { userRouter } = require("./users/routes");
+const { likesRouter } = require("./likes/routes");
 const { jwtFilter } = require("./authentication/middlewares");
 
 const app = express();
@@ -28,6 +29,7 @@ app.use(morgan("dev"));
 app.get("/", (req, res) => res.send("ok"));
 app.use("/auth", authRouter);
 
+// api docs
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(APIDocs.get()));
 
 // private routes
@@ -35,6 +37,7 @@ app.use(jwtFilter());
 app.get("/private", (req, res) => res.send("Welcome to inPlace"));
 app.use("/offers", offersRouter);
 app.use("/users", userRouter);
+app.use("/likes", likesRouter);
 
 app.use(errorHandler()); // Error handling middleware
 

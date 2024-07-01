@@ -25,6 +25,7 @@ const registerFormSchema: any = z
         firstName: z.string().min(2),
         lastName: z.string().min(2),
         email: z.string().email(),
+        phone_number: z.string(),
         password: z.string().min(8),
         passwordConfirmation: z.string().min(8),
     })
@@ -50,6 +51,7 @@ export function Register() {
             firstName: "",
             lasName: "",
             email: "",
+            phone_number: "",
             password: "",
             passwordConfirmation: "",
         },
@@ -67,6 +69,7 @@ export function Register() {
                 last_name: values.lastName,
                 email: values.email,
                 password: values.password,
+                phone_number: values.phone_number,
                 confirm_password: values.passwordConfirmation,
             }),
         })
@@ -149,6 +152,25 @@ export function Register() {
                                 </FormItem>
                             )}
                         />
+
+                        <FormField
+                            control={form.control}
+                            name="phone_number"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Phone Number</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="text"
+                                            placeholder="Phone number"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
                         <FormField
                             control={form.control}
                             name="password"

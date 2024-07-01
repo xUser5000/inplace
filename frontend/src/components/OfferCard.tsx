@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { HumanReadableDate } from "@/lib/date";
-import { Bath, Bed, SwatchBook, Users } from "lucide-react";
+import { Bath, Bed, Ruler, SwatchBook, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 export function OfferCard({ offer }: any) {
     return (
@@ -24,8 +24,8 @@ export function OfferCard({ offer }: any) {
                             <span>{offer.bedCount}</span>
                         </div>
                         <div className="flex items-center gap-2 " >
-                            <Users size={20} />
-                            <span>{offer.capacity}</span>
+                            <Ruler size={20} />
+                            <span>{offer.area}</span>
                         </div>
                     </div>
 
@@ -36,8 +36,8 @@ export function OfferCard({ offer }: any) {
                     <div className="flex items-center justify-between mt-3 -mb-3r2">
                         <span> {HumanReadableDate(offer.createdAt)} </span>
                         <div className="flex items-center gap-3">
-                            {offer.forRent && <div className="text-green-500 text-lg font-bold"> ${offer.rentCost} /mo </div>}
-                            {offer.forSale && <div className="text-green-500 text-lg font-bold"> ${offer.saleCost} </div>}
+                            {offer.offerType == 'for_rent' && <div className="text-green-500 text-lg font-bold"> ${offer.offerPrice} /mo </div>}
+                            {offer.offerType == 'for_sale' && <div className="text-green-500 text-lg font-bold"> ${offer.offerPrice} </div>}
                         </div>
                     </div>
                 </CardContent>

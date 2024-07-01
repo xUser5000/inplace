@@ -8,7 +8,7 @@ export function OffersPage() {
     const { token } = useAuth()
     const [offers, setOffers] = useState([])
     function getOffers() {
-        fetch(import.meta.env.VITE_API_URL + "/offers/offers", {
+        fetch(import.meta.env.VITE_API_URL + "/offers/all", {
             headers: {
                 "Content-Type": "application/json",
                 "x-auth-token": token || "",

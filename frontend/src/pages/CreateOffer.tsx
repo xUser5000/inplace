@@ -19,6 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useState } from "react"
 import { useAuth } from "@/components/providers/auth-provider"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 const formSchema = z.object({
     title: z.string().nonempty(),
@@ -26,11 +27,8 @@ const formSchema = z.object({
     // latitude: z.number().min(-90).max(90),
     images: z.array(z.string().url()).min(1),
     isFurnished: z.boolean(),
-    forRent: z.boolean(),
-    forSale: z.boolean(),
-    rentCost: z.number(),
-    saleCost: z.number(),
-    capacity: z.number().int(),
+    offerPrice: z.number(),
+    offerType: z.string(),
     floorNumber: z.number().int(),
     roomCount: z.number().int(),
     bathroomCount: z.number().int(),
@@ -53,11 +51,8 @@ export function CreateOffersPage() {
             // latitude: 0,
             images: [""],
             isFurnished: false,
-            forRent: false,
-            forSale: false,
-            rentCost: 0,
-            saleCost: 0,
-            capacity: 0,
+            offerType: "for_rent",
+            offerPrice: 0,
             floorNumber: 0,
             roomCount: 0,
             bathroomCount: 0,
@@ -72,7 +67,7 @@ export function CreateOffersPage() {
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log("Creating offer", values)
         setCreateErr(null)
-        fetch(import.meta.env.VITE_API_URL + "/offers/offer", {
+        fetch(import.meta.env.VITE_API_URL + "/offers/create", {
             method: "POST",
             headers: {
                 'Content-Type': "application/json",
@@ -187,82 +182,38 @@ export function CreateOffersPage() {
                                     </FormItem>
                                 )}
                             />
-                            <FormField
-                                control={form.control}
-                                name="forRent"
-                                render={({ field }) => (
-                                    <FormItem className="flex items-center gap-3">
-                                        <FormControl>
-                                            <Checkbox
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                            />
-                                        </FormControl>
-                                        <FormLabel>For Rent</FormLabel>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="forSale"
-                                render={({ field }) => (
-                                    <FormItem className="flex items-center gap-3"
-                                    >
-                                        <FormControl>
-                                            <Checkbox
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                            />
-                                        </FormControl>
-                                        <FormLabel>For Sale</FormLabel>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
                         </div>
 
                         <div className="grid grid-cols-3 gap-3">
-                            <FormField
-                                control={form.control}
-                                name="rentCost"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Rent Cost</FormLabel>
-                                        <FormControl>
-                                            <Input type="number" placeholder="Rent Cost" {...field}
-                                                onChange={event => field.onChange(+event.target.value)}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="saleCost"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Sale Cost</FormLabel>
-                                        <FormControl>
-                                            <Input type="number" placeholder="Sale Cost" {...field}
 
-                                                onChange={event => field.onChange(+event.target.value)}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
                             <FormField
                                 control={form.control}
-                                name="capacity"
+                                name="offerType"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Capacity</FormLabel>
-                                        <FormControl>
-                                            <Input type="number" placeholder="Capacity" {...field}
+                                        <FormLabel>Offer type</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select a verified email to display" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="for_rent">For Rent</SelectItem>
+                                                <SelectItem value="for_sale">For Sale</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormItem>
+                                )} />
 
+                            <FormField
+                                control={form.control}
+                                name="offerPrice"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Offer Price</FormLabel>
+                                        <FormControl>
+                                            <Input type="number" placeholder="Offer price" {...field}
                                                 onChange={event => field.onChange(+event.target.value)}
                                             />
                                         </FormControl>
@@ -391,6 +342,6 @@ export function CreateOffersPage() {
                     </form>
                 </Form>
             </CardContent>
-        </Card>
+        </Card >
     )
 }

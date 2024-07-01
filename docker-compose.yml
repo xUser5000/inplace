@@ -13,7 +13,6 @@ services:
       - "3000:3000"
     volumes:
       - "./backend/:/app/"
-    restart: on-failure
     networks:
       - my_network
 
@@ -28,7 +27,6 @@ services:
       - "5432:5432"
     volumes:
       - inplace_db_data:/var/lib/postgresql/data
-    restart: always
     networks:
       - my_network
 

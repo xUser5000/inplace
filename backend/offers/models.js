@@ -6,18 +6,16 @@ const { STRING, BOOLEAN, INTEGER, DOUBLE, ARRAY, ENUM } = require("sequelize");
 const OFFER_TYPE_ENUM = ["for_rent", "for_sale"];
 
 const Offer = sequelize.define("offers", {
-<<<<<<< HEAD
 	title: {
 		type: STRING,
 		allowNull: false,
-=======
+	},
 	description: {
 		type: STRING,
 		allowNull: false,
 		validate: {
 			max: 50
 		}
->>>>>>> master
 	},
 	longitude: {
 		type: DOUBLE,

@@ -81,7 +81,7 @@ export function Login() {
     }
 
     return (
-        <Card className=" w-[350px] md:w-[450px] mx-auto ">
+        <Card className=" w-[350px] md:w-[450px] mx-auto mt-20 ">
             <CardHeader>
                 <CardTitle>Login</CardTitle>
             </CardHeader>
@@ -124,10 +124,11 @@ export function Login() {
                         )}
 
                         <div className="flex items-center justify-between mb-1">
-                            <Label asChild>
+                            <div className="flex-1"></div>
+                            {/* <Label asChild>
                                 <Link to="/forgot-password">
                                     Forgot Password ?</Link>
-                            </Label>
+                            </Label> */}
                             <Label asChild>
                                 <Link to="/register">Register</Link>
                             </Label>

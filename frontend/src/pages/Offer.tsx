@@ -1,12 +1,13 @@
 import { useAuth } from "@/components/providers/auth-provider";
 import { Button } from "@/components/ui/button";
-import { Bath, Bed, MessageCircle, MessageSquare, Phone, Ruler } from "lucide-react";
+import { Bath, Bed, MessageCircle, MessageSquare, Phone, Ruler, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick"
 
 export function OfferPage() {
-    const { token } = useAuth()
+    const navigate = useNavigate()
+    const { user: authUser, token } = useAuth()
     const [offer, setOffer] = useState<any>({})
     const [user, setUser] = useState<any>({})
     const offerID = useParams().id
@@ -19,9 +20,25 @@ export function OfferPage() {
         }).then(res => res.json()).then(data => {
             setOffer(data)
             setUser(data.user)
-            console.log(data)
         }
         )
+    }
+
+    function deleteOffer(id: any) {
+        let deleteOffer = confirm("Are you sure you want to delete this offer?")
+        if (!deleteOffer) {
+            return
+        }
+        fetch(import.meta.env.VITE_API_URL + "/offers/remove/" + id, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "x-auth-token": token || "",
+            }
+        }).then(res => res.json()).then(data => {
+            navigate("/profile/offers")
+        })
+
     }
 
     useEffect(() => {
@@ -113,7 +130,10 @@ export function OfferPage() {
                         </>
                     }
 
-
+                    {authUser?.id == offer?.user?.id && <Button onClick={() => deleteOffer(offer.id)} variant={"destructive"}>
+                        <Trash className="mr-2" />
+                        Delete
+                    </Button>}
                 </div>
             </div>
 

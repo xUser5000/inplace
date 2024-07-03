@@ -41,7 +41,7 @@ export function CreateOffersPage() {
         bedCount: z.number().int(),
         area: z.number(),
         appliances: z.array(z.string()).optional(),
-        notes: z.string().optional(),
+        // notes: z.string().optional(),
         description: z.string().max(50)
     })
 
@@ -63,7 +63,7 @@ export function CreateOffersPage() {
             bedCount: 0,
             area: 0,
             appliances: [],
-            notes: "",
+            // notes: "",
             description: ""
         },
     })
@@ -331,7 +331,7 @@ export function CreateOffersPage() {
 
 
                         </div>
-                        <FormField
+                        {/* <FormField
                             control={form.control}
                             name="notes"
                             render={({ field }) => (
@@ -343,7 +343,7 @@ export function CreateOffersPage() {
                                     <FormMessage />
                                 </FormItem>
                             )}
-                        />
+                        /> */}
                         {createErr && (
                             <Alert variant="destructive">
                                 <AlertTitle>Error</AlertTitle>

@@ -37,7 +37,6 @@ defineRoute({
 	}
 });
 
-
 defineRoute({
 	router: publicOffersRouter,
 	feature: FEATURE,
@@ -51,18 +50,17 @@ defineRoute({
 				[Op.or]: [
 					{ title: { [Op.iLike]: `%${query}%` } },
 					{ description: { [Op.iLike]: `%${query}%` } },
-					{ notes: { [Op.iLike]: `%${query}%` } },
-				],
-			},
-
+					{ notes: { [Op.iLike]: `%${query}%` } }
+				]
+			}
 		});
 		res.json(offers);
 	}
-})
+});
 
 const addOfferSchema = joi.object({
 	title: joi.string().required(),
-	description: joi.string().max(50).required(),
+	description: joi.string().max(50).allow(""),
 	// longitude: joi.number().min(-180).max(180).required(),
 	// latitude: joi.number().min(-90).max(90).required(),
 	area: joi.number().required(),
@@ -77,9 +75,8 @@ const addOfferSchema = joi.object({
 	bathroomCount: joi.number().integer(),
 	bedCount: joi.number().integer(),
 	images: joi.array().items(joi.string()).default([]),
-	appliances: joi.array().items(joi.string()).default([]),
-	notes: joi.string(),
-
+	appliances: joi.string().allow(""),
+	notes: joi.string()
 });
 defineRoute({
 	router: privateOffersRouter,

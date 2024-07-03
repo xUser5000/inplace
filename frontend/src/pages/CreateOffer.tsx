@@ -25,13 +25,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 export function CreateOffersPage() {
     const navigate = useNavigate()
     const { token } = useAuth()
-    const [createErr, setCreateErr] = useState<string | null>(null)
+    const [createErr, setCreateErr] = useState<string | null>(null);
 
+    const [image, setImage] = useState<any | null>(null);
     const formSchema = z.object({
         title: z.string().nonempty(),
         // longitude: z.number().min(-180).max(180),
         // latitude: z.number().min(-90).max(90),
-        images: z.array(z.string()),
+        image: z.any().nullable(),
         isFurnished: z.boolean(),
         offerPrice: z.number(),
         offerType: z.string(),
@@ -40,7 +41,7 @@ export function CreateOffersPage() {
         bathroomCount: z.number().int(),
         bedCount: z.number().int(),
         area: z.number(),
-        appliances: z.array(z.string()).optional(),
+        appliances: z.string().optional(),
         // notes: z.string().optional(),
         description: z.string().max(50)
     })
@@ -53,7 +54,6 @@ export function CreateOffersPage() {
             title: "",
             // longitude: 0,
             // latitude: 0,
-            images: [""],
             isFurnished: false,
             offerType: "for_rent",
             offerPrice: 0,
@@ -62,28 +62,33 @@ export function CreateOffersPage() {
             bathroomCount: 0,
             bedCount: 0,
             area: 0,
-            appliances: [],
-            // notes: "",
+            appliances: "",
             description: ""
         },
     })
 
-    function handleFileChange(event: any) {
-        const files = Array.from(event.target.files);
-        const fileURLs = files.map((file: any) => URL.createObjectURL(file));
-        form.setValue('images', fileURLs);
+    function handleImageChange(event: any) {
+        setImage(() => event.target.files[0]);
     }
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log("Creating offer", values)
-        setCreateErr(null)
+        console.log("Creating offer");
+        setCreateErr(null);
+        const data = new FormData();
+        console.log(form.getValues());
+        Object.entries(form.getValues()).forEach(([key,value]) => {
+            console.log(value);
+            data.append(key, value);
+        });
+        data.append("images", image);
+        data.delete("image");   // redundant entry (will be undefined anyway)
+        console.log(data);
         fetch(import.meta.env.VITE_API_URL + "/offers/create", {
             method: "POST",
             headers: {
-                'Content-Type': "application/json",
                 'x-auth-token': token || ""
             },
-            body: JSON.stringify(values),
+            body: data,
         }).then(res => res.json()).then(data => {
             if (data.message) {
                 setCreateErr(data.message)
@@ -161,15 +166,12 @@ export function CreateOffersPage() {
 
                         <FormField
                             control={form.control}
-                            name="images"
+                            name="image"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Images</FormLabel>
+                                    <FormLabel>Image</FormLabel>
                                     <FormControl>
-                                        <Input type="text" placeholder="Image URL" {...field}
-
-                                            onChange={event => field.onChange(event.target.value.split(","))}
-                                        />
+                                        <Input type="file" {...field} onChange={handleImageChange} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

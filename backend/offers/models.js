@@ -68,9 +68,7 @@ const Offer = sequelize.define("offers", {
 		type: INTEGER
 	},
 	appliances: {
-		type: ARRAY(STRING),
-		allowNull: false,
-		defaultValue: []
+		type: STRING
 	}
 });
 

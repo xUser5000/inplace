@@ -7,6 +7,8 @@ const { NotFoundError, InternalServerError } = require("../core/errors");
 const { Offer, OFFER_TYPE_ENUM } = require("./models");
 const { upload } = require("./../core/middlewares");
 const { preprocessBuffer, uploadBuffer } = require("../core/images");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 const FEATURE = "offers";
 
@@ -29,11 +31,34 @@ defineRoute({
 	method: "get",
 	description: "get an offer by id",
 	handler: async (req, res) => {
-		const offer = await Offer.findByPk(req.params.id, {include: "user"});
+		const offer = await Offer.findByPk(req.params.id, { include: "user" });
 		if (!offer) throw new NotFoundError("Offer Not Found!");
 		res.json(offer);
 	}
 });
+
+
+defineRoute({
+	router: publicOffersRouter,
+	feature: FEATURE,
+	path: "/search/",
+	method: "get",
+	description: "search for offers",
+	handler: async (req, res) => {
+		const { query } = req.query;
+		const offers = await Offer.findAll({
+			where: {
+				[Op.or]: [
+					{ title: { [Op.iLike]: `%${query}%` } },
+					{ description: { [Op.iLike]: `%${query}%` } },
+					{ notes: { [Op.iLike]: `%${query}%` } },
+				],
+			},
+
+		});
+		res.json(offers);
+	}
+})
 
 const addOfferSchema = joi.object({
 	title: joi.string().required(),

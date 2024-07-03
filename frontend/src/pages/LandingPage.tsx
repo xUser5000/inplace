@@ -1,7 +1,9 @@
 import { OfferCard } from "@/components/OfferCard"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 
 export function LandingPage() {
 
@@ -27,10 +29,10 @@ export function LandingPage() {
                     <p className="text-xl my-5">
                         Inplace is a platform that connects people looking for a place to stay with people offering a place to stay.
                     </p>
-                    <div className="relative">
-                        <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Input className=" pl-10" placeholder="Search for a place to stay" />
-                    </div>
+                    <Link to="/search">
+                        <Button>
+                            Find Place Now</Button>
+                    </Link>
                 </div>
             </div>
 

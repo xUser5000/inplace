@@ -25,7 +25,7 @@ export function OffersPage({ selectedOffers, title }: any) {
         } else {
             getOffers()
         }
-    }, [])
+    }, [selectedOffers])
 
 
 
@@ -44,6 +44,9 @@ export function OffersPage({ selectedOffers, title }: any) {
                             <OfferCard key={offer.id} offer={offer} />
                         )
                     })
+                }
+                {
+                    offers.length == 0 && <div className="text-center w-full">No offers found</div>
                 }
             </div>
         </div>

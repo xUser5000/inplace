@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useEffect, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Logo } from "@/components/Logo";
 
 const registerFormSchema: any = z
     .object({
@@ -88,6 +89,7 @@ export function Register() {
     return (
         <Card className="  w-[350px] md:w-[450px] mx-auto mt-20">
             <CardHeader>
+                <Logo className="w-64 mx-auto my-10" />
                 <CardTitle>Register</CardTitle>
             </CardHeader>
 

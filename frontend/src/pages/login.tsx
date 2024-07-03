@@ -19,6 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useEffect, useState } from "react"
 import { useAuth } from "@/components/providers/auth-provider"
 import { User } from "@/lib/types";
+import { Logo } from "@/components/Logo"
 
 const formSchema = z.object({
     email: z.string().email(),
@@ -83,6 +84,7 @@ export function Login() {
     return (
         <Card className=" w-[350px] md:w-[450px] mx-auto mt-20 ">
             <CardHeader>
+                <Logo className="w-64 mx-auto my-10" />
                 <CardTitle>Login</CardTitle>
             </CardHeader>
 

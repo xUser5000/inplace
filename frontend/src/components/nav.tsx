@@ -65,10 +65,9 @@ export function Nav({
                 <DropdownMenuContent>
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
                   <DropdownMenuItem>
                     <Link to="/profile/offers">
-                      My Offers
+                      Profile
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>

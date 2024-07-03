@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-export function OffersPage() {
+export function OffersPage({ selectedOffers, title }: any) {
     const { token } = useAuth()
     const [offers, setOffers] = useState([])
     function getOffers() {
@@ -20,7 +20,11 @@ export function OffersPage() {
     }
 
     useEffect(() => {
-        getOffers()
+        if (selectedOffers) {
+            setOffers(selectedOffers)
+        } else {
+            getOffers()
+        }
     }, [])
 
 
@@ -28,11 +32,10 @@ export function OffersPage() {
     return (
         <div className="py-10 w-full container">
             <div className="flex items-center justify-between w-full">
-                <h1 className="text-2xl md:text-3xl font-bold">Offers</h1>
-
-                <Link to="/profile/offers/add" >
+                <h1 className="text-2xl md:text-3xl font-bold"> {title || "Offers"} </h1>
+                {token && (<Link to="/profile/offers/add" >
                     <Button>Add Offer</Button>
-                </Link>
+                </Link>)}
             </div>
             <div className="grid grid-cols-1  md:grid-cols-3 gap-10 md:gap-3 my-10">
                 {

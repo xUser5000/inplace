@@ -4,7 +4,7 @@ import { Bath, Bed, Ruler, SwatchBook, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 export function OfferCard({ offer }: any) {
     return (
-        <Link to={`/profile/offers/${offer.id}`}>
+        <Link to={`/offers/${offer.id}`}>
             <Card className="relative" >
                 {offer.isFurnished && <div className="absolute top-1 left-1 bg-green-500 text-white p-1 text-sm rounded ">
                     <div className="flex items-center gap-2">

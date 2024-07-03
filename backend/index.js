@@ -13,7 +13,7 @@ require("dotenv").config();
 const sequelize = require("./core/db");
 const { errorHandler } = require("./core/middlewares");
 const { authRouter } = require("./authentication/router");
-const { offersRouter } = require("./offers/routes");
+const { privateOffersRouter, publicOffersRouter } = require("./offers/routes");
 const { userRouter } = require("./users/routes");
 const { likesRouter } = require("./likes/routes");
 const { jwtFilter } = require("./authentication/middlewares");
@@ -28,6 +28,7 @@ app.use(morgan("dev"));
 // public routes (i.e routes where no authorization is required)
 app.get("/", (req, res) => res.send("ok"));
 app.use("/auth", authRouter);
+app.use("/offers", publicOffersRouter);
 
 // api docs
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(APIDocs.get()));
@@ -35,7 +36,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(APIDocs.get()));
 // private routes
 app.use(jwtFilter());
 app.get("/private", (req, res) => res.send("Welcome to inPlace"));
-app.use("/offers", offersRouter);
+app.use("/offers", privateOffersRouter);
 app.use("/users", userRouter);
 app.use("/likes", likesRouter);
 

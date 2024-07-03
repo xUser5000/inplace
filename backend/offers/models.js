@@ -9,13 +9,12 @@ const Offer = sequelize.define("offers", {
 	title: {
 		type: STRING,
 		allowNull: false,
-	},
-	description: {
-		type: STRING,
-		allowNull: false,
 		validate: {
 			max: 50
 		}
+	},
+	description: {
+		type: STRING
 	},
 	longitude: {
 		type: DOUBLE,
@@ -72,9 +71,6 @@ const Offer = sequelize.define("offers", {
 		type: ARRAY(STRING),
 		allowNull: false,
 		defaultValue: []
-	},
-	notes: {
-		type: STRING
 	}
 });
 

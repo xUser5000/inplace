@@ -10,6 +10,7 @@ import { OfferPage } from './pages/Offer.tsx'
 import { SearchPage } from './pages/Search.tsx'
 import { AboutPage } from './pages/About.tsx'
 import { ProfileOffers } from './pages/ProfileOffers.tsx'
+import { SettingsPage } from './pages/Settings.tsx'
 
 
 
@@ -29,7 +30,7 @@ export function App() {
                 <Route path='/offers/:id' element={<OfferPage />} />
                 <Route path='/profile' element={<PrivateRoute />} >
                     <Route index element={<h1>Profile</h1>} />
-                    <Route path='/profile/settings' element={<h1>Settings page</h1>} />
+                    <Route path='/profile/settings' element={<SettingsPage />} />
                     <Route path='/profile/offers' element={<ProfileOffers />} />
                     <Route path='/profile/offers/add' element={<CreateOffersPage />} />
                 </Route>

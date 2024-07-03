@@ -10,6 +10,9 @@ export function Layout() {
                 <div className="container flex-1 flex flex-col items-center justify-start">
                     <Outlet />
                 </div>
+                <div className="flex items-center justify-center p-5 w-full border-t">
+                    All Rights Reserved Inplace@2024
+                </div>
             </div>
         </ThemeProvider>
     );

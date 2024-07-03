@@ -69,6 +69,8 @@ export function Login() {
                     id: data.user.id,
                     first_name: data.user.first_name,
                     last_name: data.user.last_name,
+                    phone_number: data.user.phone_number,
+                    bio: data.user.bio,
                     email: data.user.email,
                     verified: data.user.verified,
                     createdAt: data.user.createdAt,

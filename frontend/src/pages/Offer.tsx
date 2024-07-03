@@ -1,6 +1,6 @@
 import { useAuth } from "@/components/providers/auth-provider";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, MessageSquare, Phone } from "lucide-react";
+import { Bath, Bed, MessageCircle, MessageSquare, Phone, Ruler } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Slider from "react-slick"
@@ -64,6 +64,22 @@ export function OfferPage() {
             <div className="grid grid-cols-1 md:grid-cols-6 gap-5 md:gap-2 mt-5">
                 <div className="offer-details col-span-4 flex flex-col gap-3">
                     <div className="">
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="flex items-center gap-2 " >
+                                <Bath size={20} />
+                                <span>{offer.bathroomCount}</span>
+                            </div>
+                            <div className="flex items-center gap-2 " >
+                                <Bed size={20} />
+                                <span>{offer.bedCount}</span>
+                            </div>
+                            <div className="flex items-center gap-2 " >
+                                <Ruler size={20} />
+                                <span>{offer.area}</span>
+                            </div>
+                        </div>
+
+
                         <h2 className="text-xl md:text-4xl font-black my-5" >
                             {
                                 offer.title
@@ -74,10 +90,7 @@ export function OfferPage() {
                         </p>
 
                     </div>
-                    <div className="">
-                        <h3 className="text-xl md:text-2xl font-bold">Notes</h3>
-                        {offer.notes}
-                    </div>
+
                 </div>
                 <div className="flex flex-col gap-3 contact border border-2 rounded p-5 col-span-2">
                     <h2 className="font-bold text-2xl my-2">Contact Info</h2>

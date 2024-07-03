@@ -21,28 +21,32 @@ import { useAuth } from "@/components/providers/auth-provider"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-const formSchema = z.object({
-    title: z.string().nonempty(),
-    // longitude: z.number().min(-180).max(180),
-    // latitude: z.number().min(-90).max(90),
-    images: z.array(z.string().url()).min(1),
-    isFurnished: z.boolean(),
-    offerPrice: z.number(),
-    offerType: z.string(),
-    floorNumber: z.number().int(),
-    roomCount: z.number().int(),
-    bathroomCount: z.number().int(),
-    bedCount: z.number().int(),
-    area: z.number(),
-    appliances: z.array(z.string()).optional(),
-    notes: z.string().optional(),
-    description: z.string().max(50)
-})
 
 export function CreateOffersPage() {
     const navigate = useNavigate()
     const { token } = useAuth()
     const [createErr, setCreateErr] = useState<string | null>(null)
+
+    const formSchema = z.object({
+        title: z.string().nonempty(),
+        // longitude: z.number().min(-180).max(180),
+        // latitude: z.number().min(-90).max(90),
+        images: z.array(z.string()),
+        isFurnished: z.boolean(),
+        offerPrice: z.number(),
+        offerType: z.string(),
+        floorNumber: z.number().int(),
+        roomCount: z.number().int(),
+        bathroomCount: z.number().int(),
+        bedCount: z.number().int(),
+        area: z.number(),
+        appliances: z.array(z.string()).optional(),
+        notes: z.string().optional(),
+        description: z.string().max(50)
+    })
+
+
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -63,6 +67,12 @@ export function CreateOffersPage() {
             description: ""
         },
     })
+
+    function handleFileChange(event: any) {
+        const files = Array.from(event.target.files);
+        const fileURLs = files.map((file: any) => URL.createObjectURL(file));
+        form.setValue('images', fileURLs);
+    }
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log("Creating offer", values)
@@ -147,6 +157,8 @@ export function CreateOffersPage() {
                                 </FormItem>
                             )}
                         /> */}
+
+
                         <FormField
                             control={form.control}
                             name="images"
@@ -163,6 +175,7 @@ export function CreateOffersPage() {
                                 </FormItem>
                             )}
                         />
+
                         <div className="flex items-center justify-between">
                             <FormField
                                 control={form.control}

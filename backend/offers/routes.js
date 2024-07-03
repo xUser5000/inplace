@@ -1,4 +1,5 @@
-const offersRouter = require("express").Router();
+const privateOffersRouter = require("express").Router();
+const publicOffersRouter = require("express").Router();
 const joi = require("joi");
 
 const { defineRoute } = require("../core/define_route");
@@ -10,7 +11,7 @@ const { preprocessBuffer, uploadBuffer } = require("../core/images");
 const FEATURE = "offers";
 
 defineRoute({
-	router: offersRouter,
+	router: publicOffersRouter,
 	feature: FEATURE,
 	path: "/all",
 	method: "get",
@@ -22,7 +23,7 @@ defineRoute({
 });
 
 defineRoute({
-	router: offersRouter,
+	router: publicOffersRouter,
 	feature: FEATURE,
 	path: "/offer/:id",
 	method: "get",
@@ -35,9 +36,10 @@ defineRoute({
 });
 
 const addOfferSchema = joi.object({
-	description: joi.string().max(50).required(),
-	// longitude: joi.number().min(-180).max(180).required(),
-	// latitude: joi.number().min(-90).max(90).required(),
+	title: joi.string().required(),
+	description: joi.string(),
+	longitude: joi.number().min(-180).max(180).required(),
+	latitude: joi.number().min(-90).max(90).required(),
 	area: joi.number().required(),
 	offerType: joi
 		.string()
@@ -49,11 +51,10 @@ const addOfferSchema = joi.object({
 	roomCount: joi.number().integer(),
 	bathroomCount: joi.number().integer(),
 	bedCount: joi.number().integer(),
-	appliances: joi.array().items(joi.string()).default([]),
-	notes: joi.string()
+	appliances: joi.array().items(joi.string()).default([])
 });
 defineRoute({
-	router: offersRouter,
+	router: privateOffersRouter,
 	feature: FEATURE,
 	path: "/create",
 	method: "post",
@@ -84,7 +85,7 @@ defineRoute({
 });
 
 defineRoute({
-	router: offersRouter,
+	router: privateOffersRouter,
 	feature: FEATURE,
 	path: "/remove/:id",
 	method: "delete",
@@ -103,4 +104,4 @@ defineRoute({
 	}
 });
 
-module.exports = { offersRouter };
+module.exports = { privateOffersRouter, publicOffersRouter };

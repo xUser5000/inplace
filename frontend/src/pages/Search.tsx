@@ -22,7 +22,7 @@ export function SearchPage() {
     }, [query])
 
     return (
-        <div className="container mt-10">
+        <div className="mt-10">
             <div className="relative w-full ">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input className=" pl-10" onChange={(e) => setQuery(e.target.value)} placeholder="Search for a place to stay" />

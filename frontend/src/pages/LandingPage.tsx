@@ -21,7 +21,7 @@ export function LandingPage() {
     }, [])
 
     return (
-        <div className="container mt-10">
+        <div className=" mt-10">
             <div className="grid grid-cols-1 md:grid-cols-2 min-h-[600px] gap-10">
                 <img className="object-cover rounded h-full " src="https://www.tennessean.com/gcdn/presto/2019/10/11/PNAS/adf1101a-0f8c-404f-9df3-5837bf387dfd-1_Exterior_House_Beautiful_Whole_Home_Concept_House_Castle_Homes_Photo_Reed_Brown_Photography.jpg?crop=5619,3161,x0,y104&width=3200&height=1801&format=pjpg&auto=webp" alt="" />
                 <div className="flex flex-col justify-center">

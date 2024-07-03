@@ -7,6 +7,9 @@ import { PrivateRoute } from './components/private-route.tsx'
 import { OffersPage } from './pages/Offers.tsx'
 import { CreateOffersPage } from './pages/CreateOffer.tsx'
 import { OfferPage } from './pages/Offer.tsx'
+import { SearchPage } from './pages/Search.tsx'
+import { AboutPage } from './pages/About.tsx'
+import { ProfileOffers } from './pages/ProfileOffers.tsx'
 
 
 
@@ -20,12 +23,14 @@ export function App() {
                 <Route index element={<Home />} />
                 <Route path='/login' element={<Login />} />
                 <Route path='/register' element={<Register />} />
+                <Route path='/search' element={<SearchPage />} />
+                <Route path='/about' element={<AboutPage />} />
                 <Route path='*' element={<h1>Not Found</h1>} />j
+                <Route path='/offers/:id' element={<OfferPage />} />
                 <Route path='/profile' element={<PrivateRoute />} >
                     <Route index element={<h1>Profile</h1>} />
                     <Route path='/profile/settings' element={<h1>Settings page</h1>} />
-                    <Route path='/profile/offers' element={<OffersPage />} />
-                    <Route path='/profile/offers/:id' element={<OfferPage />} />
+                    <Route path='/profile/offers' element={<ProfileOffers />} />
                     <Route path='/profile/offers/add' element={<CreateOffersPage />} />
                 </Route>
             </Route>

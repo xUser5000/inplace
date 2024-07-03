@@ -43,6 +43,10 @@ export function Nav({
           Home
         </Link>
         <Link
+          to="/search"
+          className="text-sm font-medium transition-colors hover:text-primary"
+        >Search</Link>
+        <Link
           to="/about"
           className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
         >
@@ -62,6 +66,11 @@ export function Nav({
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="/profile/offers">
+                      My Offers
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem>Settings</DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout}>
                     Logout

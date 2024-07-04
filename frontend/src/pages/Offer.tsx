@@ -1,16 +1,21 @@
 import { useAuth } from "@/components/providers/auth-provider";
 import { Button } from "@/components/ui/button";
-import { Bath, Bed, MessageCircle, MessageSquare, Phone, Ruler, Trash } from "lucide-react";
+import { Bath, Bed, MessageCircle, MessageSquare, Phone, Ruler, Trash, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick"
 
 export function OfferPage() {
     const navigate = useNavigate()
-    const { user: authUser, token } = useAuth()
-    const [offer, setOffer] = useState<any>({})
-    const [user, setUser] = useState<any>({})
+    const { user: authUser } = useAuth();
+    const [ offer, setOffer ] = useState<any>({})
+    const [ user, setUser ] = useState<any>({})
+    const [ isLiked, setIsLiked ] = useState<any>(false);
+    const [ isSaveDisabled, setIsSaveDisabled ] = useState<any>(false);
+    
     const offerID = useParams().id
+    const token = localStorage.getItem("token");
+
     function getOffers() {
         fetch(import.meta.env.VITE_API_URL + "/offers/offer/" + offerID, {
             headers: {
@@ -18,8 +23,9 @@ export function OfferPage() {
                 "x-auth-token": token || "",
             }
         }).then(res => res.json()).then(data => {
-            setOffer(data)
-            setUser(data.user)
+            setOffer(data);
+            setUser(data.user);
+            setIsLiked(data.is_liked);
         }
         )
     }
@@ -41,9 +47,37 @@ export function OfferPage() {
 
     }
 
+    async function like(id: any) {
+        setIsSaveDisabled(() => true);
+        fetch(import.meta.env.VITE_API_URL + "/likes/like/" + id, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-auth-token": token || "",
+            }
+        }).then(res => {
+            setIsLiked(() => true);
+            setIsSaveDisabled(() => false);
+        });
+    }
+
+    async function unlike(id: any) {
+        setIsSaveDisabled(() => true);
+        fetch(import.meta.env.VITE_API_URL + "/likes/unlike/" + id, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "x-auth-token": token || "",
+            }
+        }).then(res => {
+            setIsLiked(() => false);
+            setIsSaveDisabled(() => false);
+        });
+    }
+
     useEffect(() => {
         getOffers()
-    }, [])
+    }, []);
 
     let settings = {
         dots: true,
@@ -96,11 +130,8 @@ export function OfferPage() {
                             </div>
                         </div>
 
-
                         <h2 className="text-xl md:text-4xl font-black my-5" >
-                            {
-                                offer.title
-                            }
+                            {offer.title}
                         </h2>
                         <p>
                             {offer.description}
@@ -110,7 +141,6 @@ export function OfferPage() {
 
                 </div>
                 <div className="flex flex-col gap-3 contact border border-2 rounded p-5 col-span-2">
-                    <h2 className="font-bold text-2xl my-2">Contact Info</h2>
                     {user && <p>Get in touch with {user.first_name} {user.last_name} </p>}
                     {user.phone_number &&
                         <>
@@ -134,6 +164,23 @@ export function OfferPage() {
                         <Trash className="mr-2" />
                         Delete
                     </Button>}
+
+                    <br />
+                    <p>Save for later</p>
+                    {
+                        offer &&
+                        <Button disabled={isSaveDisabled} variant="outline" onClick={() => (!isLiked) ? like(offer.id) : unlike(offer.id)}>
+                            <a className="flex items-center">
+                                {
+                                    isLiked ?
+                                    <Star className="mx-3" strokeWidth={0} fill="#f1c40f" /> :
+                                    <Star className="mx-3" color="#f1c40f" />
+                                }
+
+                                { isLiked ? "Liked" : "Like"}
+                            </a>
+                        </Button>
+                    }
                 </div>
             </div>
 

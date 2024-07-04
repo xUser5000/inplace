@@ -16,7 +16,10 @@ const { authRouter } = require("./authentication/router");
 const { privateOffersRouter, publicOffersRouter } = require("./offers/routes");
 const { userRouter } = require("./users/routes");
 const { likesRouter } = require("./likes/routes");
-const { jwtFilter } = require("./authentication/middlewares");
+const {
+	attachUserInfoToReq,
+	jwtFilter
+} = require("./authentication/middlewares");
 
 const app = express();
 
@@ -24,6 +27,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(attachUserInfoToReq());
 
 // public routes (i.e routes where no authorization is required)
 app.get("/", (req, res) => res.send("ok"));

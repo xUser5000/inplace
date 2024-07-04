@@ -26,11 +26,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [loading, setLoading] = useState(true);
 
     const login = (userData: { user: User; token: string }) => {
+        console.log(userData);
         setUser(userData.user);
         setToken(userData.token);
         localStorage.setItem('token', userData.token);
         localStorage.setItem('user', JSON.stringify(userData.user));
-
     };
 
     const logout = () => {
@@ -38,7 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setToken(null);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-
+        console.log(token);
     };
 
     useEffect(() => {

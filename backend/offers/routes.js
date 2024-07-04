@@ -5,6 +5,7 @@ const joi = require("joi");
 const { defineRoute } = require("../core/define_route");
 const { NotFoundError, InternalServerError } = require("../core/errors");
 const { Offer, OFFER_TYPE_ENUM } = require("./models");
+const { Like } = require("../likes/models");
 const { upload } = require("./../core/middlewares");
 const { preprocessBuffer, uploadBuffer } = require("../core/images");
 const Sequelize = require("sequelize");
@@ -19,7 +20,21 @@ defineRoute({
 	method: "get",
 	description: "list all offers",
 	handler: async (req, res) => {
-		const offers = await Offer.findAll();
+		let offers = await Offer.findAll();
+		offers = await Promise.all(
+			offers.map(async (offer) => {
+				const likes = await Like.findAll({
+					where: { offerId: offer.id }
+				});
+				return {
+					...offer.toJSON(),
+					likes: likes.length,
+					is_liked: likes
+						.map((like) => like.userId)
+						.includes(req.userId)
+				};
+			})
+		);
 		res.json(offers);
 	}
 });
@@ -33,7 +48,16 @@ defineRoute({
 	handler: async (req, res) => {
 		const offer = await Offer.findByPk(req.params.id, { include: "user" });
 		if (!offer) throw new NotFoundError("Offer Not Found!");
-		res.json(offer);
+		const likes = await Like.findAll({
+			where: {
+				offerId: offer.id
+			}
+		});
+		res.json({
+			...offer.toJSON(),
+			likes: likes.length,
+			is_liked: likes.map((like) => like.userId).includes(req.userId)
+		});
 	}
 });
 
@@ -45,15 +69,29 @@ defineRoute({
 	description: "search for offers",
 	handler: async (req, res) => {
 		const { query } = req.query;
-		const offers = await Offer.findAll({
+		let offers = await Offer.findAll({
 			where: {
 				[Op.or]: [
 					{ title: { [Op.iLike]: `%${query}%` } },
 					{ description: { [Op.iLike]: `%${query}%` } },
-					{ notes: { [Op.iLike]: `%${query}%` } }
+					{ appliances: { [Op.iLike]: `%${query}%` } }
 				]
 			}
 		});
+		offers = await Promise.all(
+			offers.map(async (offer) => {
+				const likes = await Like.findAll({
+					where: { offerId: offer.id }
+				});
+				return {
+					...offer.toJSON(),
+					likes: likes.length,
+					is_liked: likes
+						.map((like) => like.userId)
+						.includes(req.userId)
+				};
+			})
+		);
 		res.json(offers);
 	}
 });

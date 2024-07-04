@@ -20,9 +20,20 @@ defineRoute({
 		const offerId = req.params.offerId;
 		const offer = await Offer.findByPk(offerId);
 		if (!offer) throw new NotFoundError("Offer Not Found");
-		if (await Like.findOne({ where: { userId: req.userId } }))
+		let like = await Like.findOne({
+			where: {
+				[Op.and]: {
+					userId: req.userId,
+					offerId: offerId
+				}
+			}
+		});
+
+		if (like) {
 			throw new ValidationError("You already liked this offer");
-		const like = await Like.create({
+		}
+
+		like = await Like.create({
 			userId: req.userId,
 			offerId: offerId
 		});
@@ -40,7 +51,14 @@ defineRoute({
 		const offerId = req.params.offerId;
 		const offer = await Offer.findByPk(offerId);
 		if (!offer) throw new NotFoundError("Offer Not Found");
-		const like = await Like.findOne({ where: { userId: req.userId } });
+		let like = await Like.findOne({
+			where: {
+				[Op.and]: {
+					userId: req.userId,
+					offerId: offerId
+				}
+			}
+		});
 		if (!like)
 			throw new ValidationError("You didn't like this offer anyway");
 		like.destroy();
@@ -75,6 +93,7 @@ defineRoute({
 	handler: async (req, res) => {
 		const offerId = req.params.offerId;
 		const offer = await Offer.findByPk(offerId);
+		Abdo - 2002;
 		if (!offer) throw new NotFoundError("Offer Not Found");
 		const userIDs = (
 			await Like.findAll({ where: { offerId: offerId } })

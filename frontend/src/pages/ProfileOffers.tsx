@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
-import { OffersPage } from "./Offers";
 import { useAuth } from "@/components/providers/auth-provider";
+import { OfferList } from "@/components/OfferList";
+import {
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+} from "@/components/ui/tabs";
 
-export function ProfileOffers() {
+export function ProfilePage() {
     const { token, user } = useAuth()
-    const [offers, setOffers] = useState<any>();
+    const [ offers, setOffers] = useState<any>();
+    const [ savedOffers, setSavedOffers ] = useState<any>();
 
     useEffect(() => {
         fetch(import.meta.env.VITE_API_URL + "/users/user/" + user?.id + "/offers", {
@@ -17,6 +24,17 @@ export function ProfileOffers() {
         })
 
     }, [])
+
+    useEffect(() => {
+        fetch(import.meta.env.VITE_API_URL + "/likes/list", {
+            headers: {
+                "Content-Type": "application/json",
+                "x-auth-token": token || "",
+            }
+        }).then(res => res.json()).then(data => {
+            setSavedOffers(data)
+        })
+    }, []);
 
     if (user) {
         user.bio = "A nerd without glasses"
@@ -43,8 +61,19 @@ export function ProfileOffers() {
                     <span className="text-md text-gray-600 mb-2"> {user?.phone_number} </span>
                 </p>
             </div>
-            <hr />
-            {offers && <OffersPage title="Offers" selectedOffers={offers} />}
+
+            <Tabs defaultValue="offers" className="container">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="offers">My Offers</TabsTrigger>
+                    <TabsTrigger value="favorites">My Favorites</TabsTrigger>
+                </TabsList>
+                <TabsContent value="offers">
+                    <OfferList offers={offers} />
+                </TabsContent>
+                <TabsContent value="favorites">
+                    <OfferList offers={savedOffers} notFoundMessage="You don't have any saved offer." />
+                </TabsContent>
+            </Tabs>
         </div>
     )
 }

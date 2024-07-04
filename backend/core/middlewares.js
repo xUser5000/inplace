@@ -11,6 +11,7 @@ const {
 
 const errorHandler = () => {
 	return (err, req, res, next) => {
+		console.log(err);
 		if (err instanceof APIError) {
 			return res.status(err.code).json({
 				name: err.name,
@@ -46,7 +47,6 @@ const schemaValidator = (schema) => {
 		next();
 	};
 };
-
 
 const buildQueryOptionsBasedOnQueryParams = (result_options) => {
 	/*
@@ -88,7 +88,6 @@ example of result_options object
 	};
 };
 
-
 const upload = multer({
 	storage: multer.memoryStorage(),
 	fileFilter: (req, file, cb) => {
@@ -101,4 +100,9 @@ const upload = multer({
 	}
 });
 
-module.exports = { errorHandler, schemaValidator,buildQueryOptionsBasedOnQueryParams, upload };
+module.exports = {
+	errorHandler,
+	schemaValidator,
+	buildQueryOptionsBasedOnQueryParams,
+	upload
+};

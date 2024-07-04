@@ -65,12 +65,12 @@ export function ProfilePage() {
             <Tabs defaultValue="offers" className="container">
                 <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="offers">My Offers</TabsTrigger>
-                    <TabsTrigger value="favorites">My Favorites</TabsTrigger>
+                    <TabsTrigger value="likes">Liked offers</TabsTrigger>
                 </TabsList>
                 <TabsContent value="offers">
                     <OfferList offers={offers} />
                 </TabsContent>
-                <TabsContent value="favorites">
+                <TabsContent value="likes">
                     <OfferList offers={savedOffers} notFoundMessage="You don't have any saved offer." />
                 </TabsContent>
             </Tabs>

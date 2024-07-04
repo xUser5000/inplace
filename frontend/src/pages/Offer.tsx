@@ -98,6 +98,11 @@ export function OfferPage() {
         ]
     };
 
+    console.log(user);
+    console.log(authUser);
+    
+
+
     return (
         <div className="py-10 w-full container">
             <div className="slider-cotainer">
@@ -141,8 +146,8 @@ export function OfferPage() {
 
                 </div>
                 <div className="flex flex-col gap-3 contact border border-2 rounded p-5 col-span-2">
-                    {user && <p>Get in touch with {user.first_name} {user.last_name} </p>}
-                    {user.phone_number &&
+                    {(authUser?.id != offer?.user?.id) && <p>Get in touch with {user.first_name} {user.last_name} </p>}
+                    {(authUser?.id != offer?.user?.id) && user.phone_number &&
                         <>
                             <Button className="bg-green-500 text-white">
                                 <a href={"whatsapp://send?abid=" + user.phone_number} target="_blank" className="flex items-center">
@@ -160,11 +165,6 @@ export function OfferPage() {
                         </>
                     }
 
-                    {authUser?.id == offer?.user?.id && <Button onClick={() => deleteOffer(offer.id)} variant={"destructive"}>
-                        <Trash className="mr-2" />
-                        Delete
-                    </Button>}
-
                     <br />
                     <p>Save for later</p>
                     {
@@ -179,6 +179,17 @@ export function OfferPage() {
 
                                 { isLiked ? "Liked" : "Like"}
                             </a>
+                        </Button>
+                    }
+
+                    {
+                        authUser?.id == offer?.user?.id &&
+                        "Delete offer"
+                    }
+                    {
+                        authUser?.id == offer?.user?.id &&
+                        <Button onClick={() => deleteOffer(offer.id)} variant={"destructive"}>
+                            <Trash className="mr-2" /> Delete
                         </Button>
                     }
                 </div>

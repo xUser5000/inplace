@@ -68,7 +68,7 @@ export function ProfilePage() {
                     <TabsTrigger value="likes">Liked offers</TabsTrigger>
                 </TabsList>
                 <TabsContent value="offers">
-                    <OfferList offers={offers} />
+                    <OfferList offers={offers} notFoundMessage="You haven't created any offer." />
                 </TabsContent>
                 <TabsContent value="likes">
                     <OfferList offers={savedOffers} notFoundMessage="You don't have any saved offer." />

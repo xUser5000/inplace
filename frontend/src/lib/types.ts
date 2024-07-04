@@ -15,21 +15,17 @@ export interface Offer {
     area: number;
     bathroomCount: number;
     bedCount: number;
-    capacity: number;
     createdAt: string; // or Date if you want to handle date objects
     description: string;
     floorNumber: number;
-    forRent: boolean;
-    forSale: boolean;
+    offerType: string;
+    offerPrice: number;
     id: number;
     images: string[];
     isFurnished: boolean;
     latitude: number | null;
     longitude: number | null;
-    notes: string;
-    rentCost: number;
     roomCount: number;
-    saleCost: number;
     title: string;
     updatedAt: string; // or Date if you want to handle date objects
 }

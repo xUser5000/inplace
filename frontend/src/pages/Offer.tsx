@@ -1,6 +1,7 @@
 import { useAuth } from "@/components/providers/auth-provider";
 import { Button } from "@/components/ui/button";
-import { Bath, Bed, MessageCircle, MessageSquare, Phone, Ruler, Trash, Star } from "lucide-react";
+import { OfferDetails } from "@/components/OfferDetails";
+import { MessageCircle, Phone, Trash, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick"
@@ -98,10 +99,6 @@ export function OfferPage() {
         ]
     };
 
-    console.log(user);
-    console.log(authUser);
-    
-
 
     return (
         <div className="py-10 w-full container">
@@ -118,33 +115,9 @@ export function OfferPage() {
                 </Slider>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-6 gap-5 md:gap-2 mt-5">
-                <div className="offer-details col-span-4 flex flex-col gap-3">
-                    <div className="">
-                        <div className="flex items-center gap-3 mb-2">
-                            <div className="flex items-center gap-2 " >
-                                <Bath size={20} />
-                                <span>{offer.bathroomCount}</span>
-                            </div>
-                            <div className="flex items-center gap-2 " >
-                                <Bed size={20} />
-                                <span>{offer.bedCount}</span>
-                            </div>
-                            <div className="flex items-center gap-2 " >
-                                <Ruler size={20} />
-                                <span>{offer.area}</span>
-                            </div>
-                        </div>
-
-                        <h2 className="text-xl md:text-4xl font-black my-5" >
-                            {offer.title}
-                        </h2>
-                        <p>
-                            {offer.description}
-                        </p>
-
-                    </div>
-
-                </div>
+                
+                <OfferDetails offer={offer} />
+                
                 <div className="flex flex-col gap-3 contact border border-2 rounded p-5 col-span-2">
                     {(authUser?.id != offer?.user?.id) && <p>Get in touch with {user.first_name} {user.last_name} </p>}
                     {(authUser?.id != offer?.user?.id) && user.phone_number &&

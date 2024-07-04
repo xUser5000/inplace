@@ -59,8 +59,8 @@ defineRoute({
 });
 
 const addOfferSchema = joi.object({
-	title: joi.string().required(),
-	description: joi.string().max(50).allow(""),
+	title: joi.string().required().max(50),
+	description: joi.string().allow(""),
 	// longitude: joi.number().min(-180).max(180).required(),
 	// latitude: joi.number().min(-90).max(90).required(),
 	area: joi.number().required(),

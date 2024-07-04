@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { HumanReadableDate } from "@/lib/date";
-import { Bath, Bed, Ruler, SwatchBook, Users } from "lucide-react";
+import { Bath, Bed, Ruler, SwatchBook, Users, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 export function OfferCard({ offer }: any) {
     return (
@@ -15,7 +15,7 @@ export function OfferCard({ offer }: any) {
                 {offer.images.length > 0 && <img src={offer.images[0]} className="rounded" alt={offer.title} />}
                 <CardHeader>
                     <div className="flex items-center gap-3 mb-2">
-                        <div className="flex items-center gap-2 " >
+                        <div className="flex items-center gap-3 " >
                             <Bath size={20} />
                             <span>{offer.bathroomCount}</span>
                         </div>
@@ -26,6 +26,10 @@ export function OfferCard({ offer }: any) {
                         <div className="flex items-center gap-2 " >
                             <Ruler size={20} />
                             <span>{offer.area}</span>
+                        </div>
+                        <div className="flex ml-auto items-center gap-2 " >
+                            <Star size={20} />
+                            <span>{offer.likes}</span>
                         </div>
                     </div>
 

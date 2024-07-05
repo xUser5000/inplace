@@ -12,11 +12,23 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useNavigate } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useState } from "react"
+import { useState, useMemo, useRef } from "react"
 import { useAuth } from "@/components/providers/auth-provider"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -28,10 +40,27 @@ export function CreateOffersPage() {
     const [createErr, setCreateErr] = useState<string | null>(null);
 
     const [image, setImage] = useState<any | null>(null);
+    const [isLocationDialogOpen, setIsLocationDialogOpen] = useState<boolean>(false);
+    const [location, setLocation] = useState<any>({
+        lat: 30.42477645760958,
+        lng: 31.039046040333268
+    });
+    const markerRef = useRef<any>(null);
+    const markerEventHandlers = useMemo(
+        () => ({
+          dragend() {
+            const marker: any = markerRef.current
+            if (marker != null) {
+              setLocation(marker.getLatLng());
+            }
+          },
+        }),
+        [],
+    )
     const formSchema = z.object({
         title: z.string().nonempty(),
-        // longitude: z.number().min(-180).max(180),
-        // latitude: z.number().min(-90).max(90),
+        longitude: z.number().min(-180).max(180).nullable(),
+        latitude: z.number().min(-90).max(90).nullable(),
         image: z.any().nullable(),
         isFurnished: z.boolean(),
         offerPrice: z.number(),
@@ -52,8 +81,8 @@ export function CreateOffersPage() {
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: "",
-            // longitude: 0,
-            // latitude: 0,
+            longitude: null,
+            latitude: null,
             isFurnished: false,
             offerType: "for_rent",
             offerPrice: 0,
@@ -71,13 +100,16 @@ export function CreateOffersPage() {
         setImage(() => event.target.files[0]);
     }
 
+    function handleLocationButtonClicked(event: any) {
+        setIsLocationDialogOpen(true);
+    }
+
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log("Creating offer");
         setCreateErr(null);
         const data = new FormData();
         console.log(form.getValues());
         Object.entries(form.getValues()).forEach(([key,value]) => {
-            console.log(value);
             data.append(key, value);
         });
         data.append("images", image);
@@ -162,6 +194,61 @@ export function CreateOffersPage() {
                                 </FormItem>
                             )}
                         /> */}
+
+                        <FormItem>
+                            <FormLabel>Location</FormLabel>
+                            <FormControl>
+                                <Button
+                                    className="w-full"
+                                    type="button"
+                                    variant={"outline"}
+                                    onClick={handleLocationButtonClicked}
+                                >
+                                    Choose Location
+                                    {" "}
+                                    {
+                                        form.getValues("longitude") && form.getValues("latitude") &&
+                                        ( "(" + form.getValues("longitude") + ", " + form.getValues("latitude") + ")" )
+                                    }
+                                </Button>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+
+                        {/* Location Dialog */}
+                        <Dialog open={isLocationDialogOpen} onOpenChange={setIsLocationDialogOpen}>
+                            <DialogContent className="sm:max-w-[90vw]" onCloseAutoFocus={() => false}>
+                                <DialogHeader>
+                                    <DialogTitle>Select the location of the apartment</DialogTitle>
+                                </DialogHeader>
+                                <DialogDescription>
+                                    Drag the marker to the desired location
+                                </DialogDescription>
+                                <div className="container">
+                                    <MapContainer center={location} zoom={13} style={{ height: '400px', width: '100%' }}>
+                                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                                        <Marker
+                                            position={location}
+                                            draggable={true}
+                                            eventHandlers={markerEventHandlers}
+                                            ref={markerRef}
+                                        />
+                                    </MapContainer>
+                                </div>
+                                <DialogFooter>
+                                    <Button
+                                        type="submit"
+                                        onClick={() => {
+                                            form.setValue("longitude", location.lng);
+                                            form.setValue("latitude", location.lat);
+                                            setIsLocationDialogOpen(false);
+                                        }}
+                                    >
+                                        Save changes
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
 
 
                         <FormField

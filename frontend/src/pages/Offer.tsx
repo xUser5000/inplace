@@ -99,6 +99,8 @@ export function OfferPage() {
         ]
     };
 
+    console.log(offer);
+
 
     return (
         <div className="py-10 w-full container">

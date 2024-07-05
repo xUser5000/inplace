@@ -23,8 +23,8 @@ export interface Offer {
     id: number;
     images: string[];
     isFurnished: boolean;
-    latitude: number | null;
-    longitude: number | null;
+    latitude: number | null | undefined;
+    longitude: number | null | undefined;
     roomCount: number;
     title: string;
     updatedAt: string; // or Date if you want to handle date objects

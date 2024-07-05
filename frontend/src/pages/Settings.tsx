@@ -41,7 +41,7 @@ export function SettingsPage() {
                 email: values.email,
                 password: values.password
             }),
-        }).then(res => res.json()).then(data => {
+        }).then(res => res.json()).then(() => {
 
         })
     }

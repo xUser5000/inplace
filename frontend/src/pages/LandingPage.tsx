@@ -1,8 +1,6 @@
 import { Logo } from "@/components/Logo"
 import { OfferCard } from "@/components/OfferCard"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Search } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 

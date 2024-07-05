@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { OfferDetails } from "@/components/OfferDetails";
 import { MessageCircle, Phone, Trash, Star } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick"
 
 export function OfferPage() {
@@ -42,7 +42,7 @@ export function OfferPage() {
                 "Content-Type": "application/json",
                 "x-auth-token": token || "",
             }
-        }).then(res => res.json()).then(data => {
+        }).then(res => res.json()).then(() => {
             navigate("/profile/offers")
         })
 
@@ -56,7 +56,7 @@ export function OfferPage() {
                 "Content-Type": "application/json",
                 "x-auth-token": token || "",
             }
-        }).then(res => {
+        }).then(() => {
             setIsLiked(() => true);
             setIsSaveDisabled(() => false);
         });
@@ -70,7 +70,7 @@ export function OfferPage() {
                 "Content-Type": "application/json",
                 "x-auth-token": token || "",
             }
-        }).then(res => {
+        }).then(() => {
             setIsLiked(() => false);
             setIsSaveDisabled(() => false);
         });

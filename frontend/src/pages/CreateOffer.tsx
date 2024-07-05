@@ -19,12 +19,10 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useNavigate } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -100,11 +98,11 @@ export function CreateOffersPage() {
         setImage(() => event.target.files[0]);
     }
 
-    function handleLocationButtonClicked(event: any) {
+    function handleLocationButtonClicked() {
         setIsLocationDialogOpen(true);
     }
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    function onSubmit() {
         console.log("Creating offer");
         setCreateErr(null);
         const data = new FormData();
@@ -225,10 +223,12 @@ export function CreateOffersPage() {
                                     Drag the marker to the desired location
                                 </DialogDescription>
                                 <div className="container">
-                                    <MapContainer center={location} zoom={13} style={{ height: '400px', width: '100%' }}>
+                                {/*@ts-ignore*/}
+                                <MapContainer center={location} zoom={13} style={{ height: '400px', width: '100%' }}>
                                         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                                         <Marker
                                             position={location}
+                                            /*@ts-ignore*/
                                             draggable={true}
                                             eventHandlers={markerEventHandlers}
                                             ref={markerRef}

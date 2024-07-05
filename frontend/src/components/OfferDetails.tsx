@@ -1,7 +1,7 @@
 import { Bath, Bed, Ruler, Home, DollarSign, Star, MapPin, CheckCircle } from 'lucide-react'; // Import additional icons as needed
 import { Offer } from "@/lib/types";
 import ordinal from "ordinal";
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 
 
 interface OfferDetailsProps {
@@ -103,6 +103,7 @@ const OfferDetails: React.FC<OfferDetailsProps> = ({ offer }) => {
             <MapPin size={20} />
             <span>Location:</span>
         </div>
+        {/* @ts-ignore */}
         <MapContainer center={location} zoom={13} style={{ height: '400px', width: '100%' }}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           <Marker

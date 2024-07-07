@@ -6,17 +6,17 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
+import { useState } from "react"
 
 export function SettingsPage() {
-    const { user } = useAuth()
+    const { user, token, login } = useAuth();
+    const [ buttonEnabled, setButtonEnabled ] = useState<boolean>(true);
 
     const formSchema = z.object({
         first_name: z.string(),
         last_name: z.string(),
         bio: z.string(),
         phone_number: z.string(),
-        email: z.string().email(),
-        password: z.string(),
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -26,23 +26,28 @@ export function SettingsPage() {
             last_name: user?.last_name,
             bio: "",
             phone_number: user?.phone_number,
-            email: user?.email,
-            password: "",
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        fetch(import.meta.env.VITE_API_URL + "/auth/login", {
-            method: "POST",
+    function onSubmit() {
+        const values = form.getValues();
+        setButtonEnabled(false);
+        fetch(import.meta.env.VITE_API_URL + "/users/update", {
+            method: "PATCH",
+
             headers: {
                 'Content-Type': "application/json",
+                'x-auth-token': token || ""
             },
             body: JSON.stringify({
-                email: values.email,
-                password: values.password
+                first_name: values.first_name,
+                last_name: values.last_name,
+                bio: values.bio,
+                phone_number: values.phone_number
             }),
-        }).then(res => res.json()).then(() => {
-
+        }).then(res => res.json()).then(res => {
+            setButtonEnabled(true);
+            login({ user: res, token: token || "" });
         })
     }
 
@@ -51,7 +56,7 @@ export function SettingsPage() {
     return (
         <Card className="w-full h-full mt-10">
             <CardHeader>
-                <h1 className="font-bold text-xl md:text-3xl">Settings Page</h1>
+                <h1 className="font-bold text-xl md:text-3xl">Settings</h1>
             </CardHeader>
             <CardContent>
                 <div className="flex flex-col w-full h-full">
@@ -86,46 +91,7 @@ export function SettingsPage() {
                                     )}
                                 />
                             </div>
-                            <FormField
-                                control={form.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Email</FormLabel>
-                                        <FormControl>
-                                            <Input type="email" placeholder="email" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="password"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Password</FormLabel>
-                                        <FormControl>
-                                            <Input type="password" placeholder="password" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="phone_number"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Phone Number</FormLabel>
-                                        <FormControl>
-                                            <Input type="text" placeholder="phone number" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
+                            
                             <FormField
                                 control={form.control}
                                 name="bio"
@@ -140,10 +106,24 @@ export function SettingsPage() {
                                 )}
                             />
 
+                            <FormField
+                                control={form.control}
+                                name="phone_number"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Phone Number</FormLabel>
+                                        <FormControl>
+                                            <Input type="text" placeholder="phone number" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
                         </form>
-                        <Button className="mt-5">
-                            Submit
+
+                        <Button type="submit" className="mt-5" disabled={!buttonEnabled} onClick={onSubmit}>
+                            Update Profile
                         </Button>
                     </Form>
                 </div>

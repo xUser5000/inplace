@@ -44,7 +44,7 @@ defineRoute({
 const updateProfileSchema = joi.object({
 	first_name: joi.string(),
 	last_name: joi.string(),
-	bio: joi.string().strip().min(1).max(50),
+	bio: joi.string().allow("").max(50),
 	phone_number: joi.string()
 });
 defineRoute({
@@ -63,7 +63,7 @@ defineRoute({
 
 		if (first_name) user.first_name = first_name;
 		if (last_name) user.last_name = last_name;
-		if (bio) user.bio = bio;
+		user.bio = bio;
 		if (phone_number) user.phone_number = phone_number;
 		if (file) {
 			file.originalname = Date.now() + "__" + file.originalname;

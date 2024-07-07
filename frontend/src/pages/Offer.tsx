@@ -4,7 +4,6 @@ import { OfferDetails } from "@/components/OfferDetails";
 import { MessageCircle, Phone, Trash, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Slider from "react-slick"
 
 export function OfferPage() {
     const navigate = useNavigate()
@@ -79,25 +78,6 @@ export function OfferPage() {
     useEffect(() => {
         getOffers()
     }, []);
-
-    let settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 2,
-        slidesToScroll: 1,
-        responsive: [
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                    infinite: true,
-                    dots: true
-                }
-            }
-        ]
-    };
 
     console.log(offer);
 

@@ -105,16 +105,9 @@ export function OfferPage() {
     return (
         <div className="py-10 w-full container">
             <div className="slider-cotainer">
-                <Slider {...settings}>
-                    {
-                        offer.images?.map((image: any) => {
-                            return (<div>
-                                <img className="rounded-xl object-cover  px-3 max-h-[400px]" src={image} alt="" />
-                            </div>)
-                        })
-                    }
-
-                </Slider>
+                <div className="container">
+                    <img className="rounded-xl object-cover" src={offer.images[0]} alt="" width={"100%"} />
+                </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-6 gap-5 md:gap-2 mt-5">
                 

@@ -36,17 +36,15 @@ export function ProfilePage() {
         })
     }, []);
 
-    if (user) {
-        user.bio = "A nerd without glasses"
-    }
-
     return (
          <div className="container">
             <div className="flex flex-col my-10">
                 <h2 className="capitalize text-2xl md:text-4xl font-black text-center">
                     {user?.first_name} {user?.last_name}
                 </h2>
-                <p className="text-lg text-gray-800 mb-2 text-center"> {user?.bio.trim()} </p>
+                {   user?.bio &&
+                    <p className="text-lg text-gray-800 mb-2 text-center"> {user?.bio.trim()} </p>
+                }
                 <p className="text-sm text-gray-400 mb-2 text-center">
                     ({user?.verified ? 'Verified Account' : 'Unverified Account'})
                 </p>

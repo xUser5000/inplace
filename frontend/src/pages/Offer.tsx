@@ -105,8 +105,14 @@ export function OfferPage() {
     return (
         <div className="py-10 w-full container">
             <div className="slider-cotainer">
+                {
+                    offer.images?.map((image: any) => {
+                        return (<div>
+                            <img className="rounded-xl object-cover" key={image} src={image} alt="" width={"100%"} />
+                        </div>)
+                    })
+                }
                 <div className="container">
-                    <img className="rounded-xl object-cover" src={offer.images[0]} alt="" width={"100%"} />
                 </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-6 gap-5 md:gap-2 mt-5">
@@ -134,9 +140,9 @@ export function OfferPage() {
                     }
 
                     <br />
-                    <p>Save for later</p>
+                    { authUser && offer && <p>Save for later</p> }
                     {
-                        offer &&
+                        authUser && offer &&
                         <Button disabled={isSaveDisabled} variant="outline" onClick={() => (!isLiked) ? like(offer.id) : unlike(offer.id)}>
                             <a className="flex items-center">
                                 {
